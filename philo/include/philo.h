@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosopher.c                                      :+:      :+:    :+:   */
+/*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cde-la-r <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/30 09:20:14 by cde-la-r          #+#    #+#             */
-/*   Updated: 2024/08/30 09:20:16 by cde-la-r         ###   ########.fr       */
+/*   Created: 2025/02/24 10:11:27 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/02/24 10:17:45 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#ifndef PHILO_H
+# define PHILO_H
 
-void	*philosopher(void *arg)
+typedef struct s_params
 {
-	t_philo	*philo;
+	int	n_philos;
+	int	t_die;
+	int	t_eat;
+	int	t_sleep;
+	int	n_meals;
+}	t_params;
 
-	philo = (t_philo *)arg;
-	printf("Philosopher %d is thinking\n", philo->id);
-	usleep(1000);
-	printf("Philosopher %d is done thinking\n", philo->id);
-	return (NULL);
-}
+int	parse_args(int argc, char **argv, t_params *params);
+
+#endif

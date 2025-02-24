@@ -3,32 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cde-la-r <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/30 09:08:07 by cde-la-r          #+#    #+#             */
-/*   Updated: 2024/08/30 09:19:24 by cde-la-r         ###   ########.fr       */
+/*   Created: 2025/02/24 10:11:50 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/02/24 10:58:24 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "simulation.h"
 
 int	main(int argc, char **argv)
 {
-	int				num_philos;
-	pthread_t		*threads;
-	pthread_mutex_t	*forks;
-	t_philo			*philos;
+	t_data		data;
 
-	if (argc != 2)
+	if (parse_args(argc, argv, &(data.params)))
+		return (1);
+	if (init_simulation(&data))
 	{
-		printf("Usage: ./philo number_of_philosophers\n");
+		printf("Error initializing simulation\n");
 		return (1);
 	}
-	num_philos = atoi(argv[1]);
-	if (init_resources(&threads, &forks, &philos, num_philos) != 0)
+	if (start_simulation(&data))
+	{
+		printf("Error initializing simulation\n");
+		cleanup_simulation(&data);
 		return (1);
-	create_philosophers(threads, philos, forks, num_philos);
-	join_philosophers(threads, num_philos);
-	cleanup_resources(threads, forks, philos, num_philos);
+	}
+	cleanup_simulation(&data);
 	return (0);
 }
