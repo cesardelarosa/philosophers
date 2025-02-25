@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 10:54:49 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/25 10:58:44 by cesi             ###   ########.fr       */
+/*   Updated: 2025/02/25 16:46:35 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static void	cleanup_partial(t_table *table, int fork_count)
 	free(table->philos);
 	table->philos = NULL;
 	pthread_mutex_destroy(&table->print_mutex);
+	free(table);
 }
 
 static int	alloc_resources(t_table *table)
@@ -82,13 +83,17 @@ static int	init_forks_and_philos(t_table *table)
 
 int	init_simulation(t_table *table)
 {
+	if (table == NULL)
+		return (0);
 	table->start_time = get_time_in_ms();
 	table->stop = 0;
-	if (alloc_resources(table))
+	if (alloc_resources(table)
+		|| init_print_mutex(table)
+		|| init_forks_and_philos(table))
+	{
+		printf("Error initializing simulation\n");
+		cleanup_simulation(table);
 		return (1);
-	if (init_print_mutex(table))
-		return (1);
-	if (init_forks_and_philos(table))
-		return (1);
+	}
 	return (0);
 }

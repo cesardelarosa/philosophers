@@ -6,17 +6,17 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 19:55:53 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/24 19:55:55 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/02/25 17:24:32 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "actions.h"
+#include "philo.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <sys/time.h>
 #include <unistd.h>
 
-static void	log_action(t_philosopher *philo, const char *action)
+void	log_action(t_philosopher *philo, const char *action)
 {
 	long	timestamp;
 
