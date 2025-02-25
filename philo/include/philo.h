@@ -6,22 +6,47 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:11:27 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/24 10:17:45 by cesi             ###   ########.fr       */
+/*   Updated: 2025/02/24 20:03:16 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-typedef struct s_params
-{
-	int	n_philos;
-	int	t_die;
-	int	t_eat;
-	int	t_sleep;
-	int	n_meals;
-}	t_params;
+# define ARGS "number_of_philosophers time_to_die time_to_eat time_to_sleep"
+# define OPT_ARG "[number_of_times_each_philosopher_must_eat]"
 
-int	parse_args(int argc, char **argv, t_params *params);
+# include <pthread.h>
+
+typedef struct s_philosopher
+{
+	int				id;
+	pthread_t		thread;
+	long			last_meal;
+	int				meals_eaten;
+	struct s_table	*table;
+}	t_philosopher;
+
+typedef struct s_table
+{
+	int				n_philosophers;
+	int				t_die;
+	int				t_eat;
+	int				t_sleep;
+	int				n_meals;
+	long			start_time;
+	int				stop;
+	t_philosopher	*philos;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	print_mutex;
+}	t_table;
+
+int		init_simulation(t_table *table);
+int		start_simulation(t_table *table);
+void	cleanup_simulation(t_table *table);
+
+long	get_time_in_ms(void);
+
+int		parser(int argc, char **argv, t_table *table);
 
 #endif

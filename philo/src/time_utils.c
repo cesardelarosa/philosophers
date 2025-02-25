@@ -1,36 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   time_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/24 19:56:19 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/24 20:27:14 by cesi             ###   ########.fr       */
+/*   Created: 2025/02/25 11:02:41 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/02/25 11:05:50 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#include <sys/time.h>
 #include <stdlib.h>
-#include "philo.h"
 
-int	main(int argc, char **argv)
+long	get_time_in_ms(void)
 {
-	t_table	table;
+	struct timeval	tv;
 
-	if (parser(argc, argv, &table) != 0)
-		return (1);
-	if (init_simulation(&table))
-	{
-		printf("Error initializing simulation\n");
-		return (1);
-	}
-	if (start_simulation(&table))
-	{
-		printf("Error starting simulation\n");
-		cleanup_simulation(&table);
-		return (1);
-	}
-	cleanup_simulation(&table);
-	return (0);
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+long	get_interval_in_ms(long time)
+{
+	return (get_time_in_ms() - time);
 }
