@@ -6,25 +6,11 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 17:17:19 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/26 17:23:12 by cesi             ###   ########.fr       */
+/*   Updated: 2025/02/27 14:13:26 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-static void	update_meal_time(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->meal_mtx);
-	philo->last_meal = get_time();
-	pthread_mutex_unlock(&philo->meal_mtx);
-}
-
-static void	add_meal(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->meal_mtx);
-	philo->meals_eaten++;
-	pthread_mutex_unlock(&philo->meal_mtx);
-}
 
 static void	get_ordered_forks(t_philo *philo, t_fork **first, t_fork **second)
 {

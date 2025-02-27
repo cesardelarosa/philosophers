@@ -45,7 +45,7 @@ static uint64_t	get_time_usec(void)
 	return ((tv.tv_sec * 1000000ULL) + tv.tv_usec);
 }
 
-void	precise_usleep(long ms)
+void	precise_usleep(unsigned int ms)
 {
 	uint64_t	start;
 	uint64_t	target;

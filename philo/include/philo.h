@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:11:27 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/27 10:49:14 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/02/27 13:18:00 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,16 @@
 
 typedef struct s_fork
 {
-	int				id;
+	unsigned int	id;
 	pthread_mutex_t	mtx;
 }					t_fork;
 
 typedef struct s_philo
 {
-	int				id;
+	unsigned int	id;
 	pthread_t		thread;
 	uint64_t		last_meal;
-	int				meals_eaten;
+	unsigned int	meals_eaten;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
 	pthread_mutex_t	meal_mtx;
@@ -50,11 +50,11 @@ typedef struct s_philo
 
 typedef struct s_table
 {
-	int				n_philos;
-	long			t_die;
-	long			t_eat;
-	long			t_sleep;
-	int				n_meals;
+	unsigned int	n_philos;
+	unsigned int	t_die;
+	unsigned int	t_eat;
+	unsigned int	t_sleep;
+	long			n_meals;
 	uint64_t		start_time;
 	bool			stop;
 	pthread_t		monitor;
@@ -71,16 +71,21 @@ int					init_philosophers(t_table *table);
 int					init_simulation(t_table *table);
 int					run_simulation(t_table *table);
 void				clean_resources(t_table *table);
+void				destroy_philos(t_table *table, unsigned int n_created);
 uint64_t			get_time(void);
-void				precise_usleep(long ms);
+void				precise_usleep(unsigned int ms);
 int					error_handler(const char *msg, t_table *table);
 void				print_state(t_philo *philo, const char *state);
 bool				check_stop(t_table *table);
 void				set_stop(t_table *table, bool value);
 void				*philosopher_routine(void *arg);
 void				*monitor_routine(void *arg);
+void				update_meal_time(t_philo *philo);
+uint64_t			read_meal_time(t_philo *philo);
+unsigned int		read_meals_eaten(t_philo *philo);
+void				add_meal(t_philo *philo);
 void				to_eat(t_philo *philo);
 void				to_sleep(t_philo *philo);
-void				to_think(t_philo *philo);
+void				to_think(t_philo *philo, unsigned int t_think);
 
 #endif

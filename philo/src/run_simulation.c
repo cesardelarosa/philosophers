@@ -12,10 +12,10 @@
 
 #include "philo.h"
 
-static int	create_philo_threads(t_table *table, int *i)
+static int	create_philo_threads(t_table *table, unsigned int *i)
 {
-	*i = -1;
-	while (++(*i) < table->n_philos)
+	*i = 0;
+	while (*i < table->n_philos)
 	{
 		if (pthread_create(&table->philos[*i].thread, NULL,
 				philosopher_routine, &table->philos[*i]) != 0)
@@ -23,11 +23,12 @@ static int	create_philo_threads(t_table *table, int *i)
 			set_stop(table, true);
 			return (1);
 		}
+		(*i)++;
 	}
 	return (0);
 }
 
-static void	join_philo_threads(t_table *table, int i)
+static void	join_philo_threads(t_table *table, unsigned int i)
 {
 	while (i-- > 0)
 		pthread_join(table->philos[i].thread, NULL);
@@ -35,7 +36,7 @@ static void	join_philo_threads(t_table *table, int i)
 
 int	run_simulation(t_table *table)
 {
-	int	created;
+	unsigned int	created;
 
 	table->start_time = get_time();
 	if (create_philo_threads(table, &created) != 0)

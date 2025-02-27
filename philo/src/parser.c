@@ -6,37 +6,42 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 19:56:34 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/25 11:15:07 by cesi             ###   ########.fr       */
+/*   Updated: 2025/02/27 11:14:03 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static long	ft_atoi_checker(const char *str, int *error)
+static int	ft_isspace(int c)
 {
-	long	result;
+	return (c == ' ' || (c >= '\t' && c <= '\r'));
+}
 
-	if (!str || *error)
+static unsigned int	ft_atoui_checker(const char *str, int *error)
+{
+	unsigned int	result;
+
+	if (*error)
+		return (0);
+	if (!str)
 	{
 		*error = 1;
 		return (0);
 	}
 	result = 0;
-	while (*str == ' ' || (*str >= '\t' && *str <= '\r'))
+	while (ft_isspace((int)*str))
 		str++;
-	if (*str == '+' || *str == '-')
-	{
-		if (*str == '-')
-			*error = 1;
+	if (*str == '+')
 		str++;
-	}
-	while (*str >= '0' && *str <= '9')
+	while (*error == 0 && *str >= '0' && *str <= '9')
 	{
 		result = result * 10 + (*str++ - '0');
-		if (result > INT_MAX || result < INT_MIN)
+		if (result > INT_MAX)
 			*error = 1;
 	}
-	*error += (*str != '\0' || result < 1);
+	while (ft_isspace((int)*str))
+		str++;
+	*error += *str != '\0';
 	return (result);
 }
 
@@ -55,12 +60,12 @@ static int	fill_table(t_table *table, int argc, char **argv)
 	int	error;
 
 	error = 0;
-	table->n_philos = (int)ft_atoi_checker(argv[1], &error);
-	table->t_die = ft_atoi_checker(argv[2], &error);
-	table->t_eat = ft_atoi_checker(argv[3], &error);
-	table->t_sleep = ft_atoi_checker(argv[4], &error);
+	table->n_philos = ft_atoui_checker(argv[1], &error);
+	table->t_die = ft_atoui_checker(argv[2], &error);
+	table->t_eat = ft_atoui_checker(argv[3], &error);
+	table->t_sleep = ft_atoui_checker(argv[4], &error);
 	if (argc == 6)
-		table->n_meals = (int)ft_atoi_checker(argv[5], &error);
+		table->n_meals = (long)ft_atoui_checker(argv[5], &error);
 	else
 		table->n_meals = -1;
 	if (error)
