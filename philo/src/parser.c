@@ -12,11 +12,6 @@
 
 #include "philo.h"
 
-static int	ft_isspace(int c)
-{
-	return (c == ' ' || (c >= '\t' && c <= '\r'));
-}
-
 static unsigned int	ft_atoui_checker(const char *str, int *error)
 {
 	unsigned int	result;
@@ -29,17 +24,18 @@ static unsigned int	ft_atoui_checker(const char *str, int *error)
 		return (0);
 	}
 	result = 0;
-	while (ft_isspace((int)*str))
+	while (*str == ' ' || (*str >= '\t' && *str <= '\r'))
 		str++;
-	if (*str == '+')
-		str++;
+	str += *str == '+';
 	while (*error == 0 && *str >= '0' && *str <= '9')
 	{
 		result = result * 10 + (*str++ - '0');
-		if (result > INT_MAX)
-			*error = 1;
+		*error = (*str >= '0' && *str <= '9')
+			&& ((result > UINT_MAX / 10)
+				|| (result == UINT_MAX / 10
+					&& *str - '0' > (int)(UINT_MAX % 10)));
 	}
-	while (ft_isspace((int)*str))
+	while (*str == ' ' || (*str >= '\t' && *str <= '\r'))
 		str++;
 	*error += *str != '\0';
 	return (result);

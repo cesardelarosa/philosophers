@@ -17,14 +17,14 @@ static int	check_philosopher(t_philo *philo, t_table *table)
 	int	ret;
 
 	ret = 0;
-	if ((unsigned int)(get_time() - read_meal_time(philo)) >= table->t_die)
+	if (table->n_meals >= 0 && read_meals_eaten(philo) >= table->n_meals)
+		ret = 1;
+	else if ((unsigned int)(get_time() - read_meal_time(philo)) >= table->t_die)
 	{
 		print_state(philo, "died");
 		set_stop(table, true);
 		ret = -1;
 	}
-	else if (table->n_meals > 0 && read_meals_eaten(philo) >= table->n_meals)
-		ret = 1;
 	return (ret);
 }
 
@@ -66,7 +66,7 @@ void	*monitor_routine(void *arg)
 		completed = check_all_philosophers(table);
 		if (completed == -1)
 			break ;
-		if (table->n_meals > 0 && (unsigned int)completed == table->n_philos)
+		if (table->n_meals >= 0 && (unsigned int)completed == table->n_philos)
 		{
 			set_stop(table, true);
 			print_message(table, "All philosophers are full.");
