@@ -28,21 +28,12 @@ void	*philosopher_routine(void *arg)
 
 	philo = arg;
 	update_meal_time(philo);
-	if (philo->id % 2 == 0)
-		to_think(philo, 0);
-	else
-		to_think(philo, calc_think_time(philo));
+	to_think(philo, (philo->id % 2 != 0) * calc_think_time(philo));
 	while (!check_stop(philo->table))
 	{
-		if (philo->table->n_meals < 0
-			|| read_meals_eaten(philo) < (unsigned int)philo->table->n_meals)
-		{
-			to_eat(philo);
-			to_sleep(philo);
-			to_think(philo, calc_think_time(philo));
-		}
-		else
-			precise_usleep(1);
+		to_eat(philo);
+		to_sleep(philo);
+		to_think(philo, calc_think_time(philo));
 	}
 	return (NULL);
 }

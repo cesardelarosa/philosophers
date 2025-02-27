@@ -72,6 +72,7 @@ int					init_simulation(t_table *table);
 int					run_simulation(t_table *table);
 void				clean_resources(t_table *table);
 void				destroy_philos(t_table *table, unsigned int n_created);
+void				destroy_forks(t_table *table, unsigned int n_created);
 uint64_t			get_time(void);
 void				precise_usleep(unsigned int ms);
 int					error_handler(const char *msg, t_table *table);

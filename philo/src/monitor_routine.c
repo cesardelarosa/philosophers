@@ -14,7 +14,7 @@
 
 static int	check_philosopher(t_philo *philo, t_table *table)
 {
-	int				ret;
+	int	ret;
 
 	ret = 0;
 	if ((unsigned int)(get_time() - read_meal_time(philo)) >= table->t_die)
@@ -47,6 +47,13 @@ static long	check_all_philosophers(t_table *table)
 	return ((long)completed_count);
 }
 
+static void	print_message(t_table *table, char *str)
+{
+	pthread_mutex_lock(&table->print_mtx);
+	printf("%s\n", str);
+	pthread_mutex_unlock(&table->print_mtx);
+}
+
 void	*monitor_routine(void *arg)
 {
 	t_table	*table;
@@ -55,18 +62,16 @@ void	*monitor_routine(void *arg)
 	table = (t_table *)arg;
 	while (!check_stop(table))
 	{
+		precise_usleep(1);
 		completed = check_all_philosophers(table);
 		if (completed == -1)
 			break ;
 		if (table->n_meals > 0 && (unsigned int)completed == table->n_philos)
 		{
 			set_stop(table, true);
-			pthread_mutex_lock(&table->print_mtx);
-			printf("All philosophers are full\n");
-			pthread_mutex_unlock(&table->print_mtx);
+			print_message(table, "All philosophers are full.");
 			break ;
 		}
-		precise_usleep(1);
 	}
 	return (NULL);
 }

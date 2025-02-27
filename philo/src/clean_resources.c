@@ -12,18 +12,12 @@
 
 #include "philo.h"
 
-static void	destroy_forks(t_table *table)
+void	destroy_forks(t_table *table, unsigned int n_created)
 {
-	unsigned int	i;
-
 	if (!table->forks)
 		return ;
-	i = 0;
-	while (i < table->n_philos)
-	{
-		pthread_mutex_destroy(&table->forks[i].mtx);
-		i++;
-	}
+	while (n_created-- > 0)
+		pthread_mutex_destroy(&table->forks[n_created].mtx);
 	free(table->forks);
 	table->forks = NULL;
 }
@@ -49,6 +43,6 @@ void	clean_resources(t_table *table)
 		pthread_mutex_destroy(&table->print_mtx);
 	if (table->stop_mtx_init)
 		pthread_mutex_destroy(&table->stop_mtx);
-	destroy_forks(table);
+	destroy_forks(table, table->n_philos);
 	destroy_philos(table, table->n_philos);
 }

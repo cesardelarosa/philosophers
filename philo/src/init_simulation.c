@@ -25,10 +25,7 @@ static int	init_forks(t_table *table)
 		table->forks[i].id = i + 1;
 		if (pthread_mutex_init(&table->forks[i].mtx, NULL) != 0)
 		{
-			while (i-- > 0)
-				pthread_mutex_destroy(&table->forks[i].mtx);
-			free(table->forks);
-			table->forks = NULL;
+			destroy_forks(table, i);
 			return (1);
 		}
 		i++;

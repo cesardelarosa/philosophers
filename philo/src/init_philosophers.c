@@ -24,30 +24,6 @@ static int	init_philo_mutexes(t_philo *philo)
 	return (0);
 }
 
-static int	assign_forks(t_table *table)
-{
-	unsigned int	i;
-
-	i = 0;
-	while (i < table->n_philos)
-	{
-		if ((i + 1) % 2 == 0)
-		{
-			table->philos[i].left_fork = &table->forks[i];
-			table->philos[i].right_fork = &table->forks[(i + 1)
-				% table->n_philos];
-		}
-		else
-		{
-			table->philos[i].left_fork = &table->forks[(i + 1)
-				% table->n_philos];
-			table->philos[i].right_fork = &table->forks[i];
-		}
-		i++;
-	}
-	return (0);
-}
-
 int	init_philosophers(t_table *table)
 {
 	unsigned int	i;
@@ -62,6 +38,8 @@ int	init_philosophers(t_table *table)
 		table->philos[i].meals_eaten = 0;
 		table->philos[i].last_meal = 0;
 		table->philos[i].table = table;
+		table->philos[i].left_fork = &table->forks[i];
+		table->philos[i].right_fork = &table->forks[(i + 1) % table->n_philos];
 		if (init_philo_mutexes(&table->philos[i]))
 		{
 			destroy_philos(table, i);
@@ -69,5 +47,5 @@ int	init_philosophers(t_table *table)
 		}
 		i++;
 	}
-	return (assign_forks(table));
+	return (0);
 }
