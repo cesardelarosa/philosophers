@@ -14,7 +14,7 @@
 
 void	to_think(t_philo *philo, unsigned int t_think)
 {
-	if (philo->table->stop)
+	if (check_stop(philo->table))
 		return ;
 	print_state(philo, "is thinking");
 	if (t_think > 0)
