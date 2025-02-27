@@ -1,28 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/25 17:21:04 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/25 20:54:54 by cesi             ###   ########.fr       */
+/*   Created: 2025/02/25 20:45:14 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/02/27 10:52:31 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int argc, char **argv)
+int	error_handler(const char *msg, t_table *table)
 {
-	t_table	table;
-
-	memset(&table, 0, sizeof(t_table));
-	if (parse_arguments(argc, argv, &table))
-		return (error_handler("Invalid arguments", &table));
-	if (init_simulation(&table))
-		return (error_handler("Simulation init failed", &table));
-	if (run_simulation(&table))
-		return (error_handler("Runtime error", &table));
-	clean_resources(&table);
-	return (0);
+	if (msg)
+		printf("\033[1;31mError: %s\033[0m\n", msg);
+	if (table)
+		clean_resources(table);
+	return (1);
 }

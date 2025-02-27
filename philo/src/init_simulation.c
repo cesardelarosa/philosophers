@@ -5,95 +5,57 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/25 10:54:49 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/25 16:46:35 by cde-la-r         ###   ########.fr       */
+/*   Created: 2025/02/25 21:01:14 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/02/27 10:51:19 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/time.h>
-#include <unistd.h>
 
-static void	cleanup_partial(t_table *table, int fork_count)
+static int	init_forks(t_table *table)
 {
 	int	i;
 
-	i = 0;
-	while (i < fork_count)
-	{
-		pthread_mutex_destroy(&table->forks[i]);
-		i++;
-	}
-	free(table->forks);
-	table->forks = NULL;
-	free(table->philos);
-	table->philos = NULL;
-	pthread_mutex_destroy(&table->print_mutex);
-	free(table);
-}
-
-static int	alloc_resources(t_table *table)
-{
-	table->philos = malloc(sizeof(t_philosopher) * table->n_philosophers);
-	if (!table->philos)
-		return (1);
-	table->forks = malloc(sizeof(pthread_mutex_t) * table->n_philosophers);
+	table->forks = malloc(sizeof(t_fork) * table->n_philos);
 	if (!table->forks)
-	{
-		free(table->philos);
 		return (1);
-	}
-	return (0);
-}
-
-static int	init_print_mutex(t_table *table)
-{
-	if (pthread_mutex_init(&table->print_mutex, NULL) != 0)
+	i = -1;
+	while (++i < table->n_philos)
 	{
-		free(table->forks);
-		free(table->philos);
-		return (1);
-	}
-	return (0);
-}
-
-static int	init_forks_and_philos(t_table *table)
-{
-	int	i;
-
-	i = 0;
-	while (i < table->n_philosophers)
-	{
-		if (pthread_mutex_init(&table->forks[i], NULL) != 0)
+		table->forks[i].id = i + 1;
+		if (pthread_mutex_init(&table->forks[i].mtx, NULL) != 0)
 		{
-			cleanup_partial(table, i);
+			while (--i >= 0)
+				pthread_mutex_destroy(&table->forks[i].mtx);
+			free(table->forks);
+			table->forks = NULL;
 			return (1);
 		}
-		table->philos[i].id = i + 1;
-		table->philos[i].last_meal = table->start_time;
-		table->philos[i].meals_eaten = 0;
-		table->philos[i].table = table;
-		i++;
 	}
+	return (0);
+}
+
+static int	init_mutexes(t_table *table)
+{
+	if (pthread_mutex_init(&table->print_mtx, NULL) != 0)
+		return (1);
+	table->print_mtx_init = 1;
+	if (pthread_mutex_init(&table->stop_mtx, NULL) != 0)
+		return (1);
+	table->stop_mtx_init = 1;
 	return (0);
 }
 
 int	init_simulation(t_table *table)
 {
-	if (table == NULL)
-		return (0);
-	table->start_time = get_time_in_ms();
-	table->stop = 0;
-	if (alloc_resources(table)
-		|| init_print_mutex(table)
-		|| init_forks_and_philos(table))
-	{
-		printf("Error initializing simulation\n");
-		cleanup_simulation(table);
-		return (1);
-	}
+	if (table->n_philos < 1 || table->n_philos > PHILO_MAX)
+		return (error_handler("Invalid philosophers number", table));
+	if (init_mutexes(table))
+		return (error_handler("Mutex initialization failed", table));
+	if (init_forks(table))
+		return (error_handler("Forks initialization failed", table));
+	if (init_philosophers(table))
+		return (error_handler("Philosophers initialization failed", table));
+	table->stop = false;
 	return (0);
 }

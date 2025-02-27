@@ -10,16 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
 #include "philo.h"
 
-static int	ft_atoi_checker(const char *str, int *error)
+static long	ft_atoi_checker(const char *str, int *error)
 {
 	long	result;
 
-	if (!str)
+	if (!str || *error)
 	{
 		*error = 1;
 		return (0);
@@ -27,15 +24,23 @@ static int	ft_atoi_checker(const char *str, int *error)
 	result = 0;
 	while (*str == ' ' || (*str >= '\t' && *str <= '\r'))
 		str++;
-	if (*str == '+')
+	if (*str == '+' || *str == '-')
+	{
+		if (*str == '-')
+			*error = 1;
 		str++;
-	while (result <= (long)INT_MAX && *str >= '0' && *str <= '9')
+	}
+	while (*str >= '0' && *str <= '9')
+	{
 		result = result * 10 + (*str++ - '0');
-	*error += result > (long)INT_MAX || result == 0 || *str != '\0';
-	return ((int)result);
+		if (result > INT_MAX || result < INT_MIN)
+			*error = 1;
+	}
+	*error += (*str != '\0' || result < 1);
+	return (result);
 }
 
-int	validate_args(int argc, char **argv)
+static int	validate_args(int argc, char **argv)
 {
 	if (argc < 5 || argc > 6)
 	{
@@ -45,40 +50,32 @@ int	validate_args(int argc, char **argv)
 	return (1);
 }
 
-int	fill_table(t_table *table, char **argv)
+static int	fill_table(t_table *table, int argc, char **argv)
 {
 	int	error;
 
 	error = 0;
-	table->n_philosophers = ft_atoi_checker(argv[1], &error);
+	table->n_philos = (int)ft_atoi_checker(argv[1], &error);
 	table->t_die = ft_atoi_checker(argv[2], &error);
 	table->t_eat = ft_atoi_checker(argv[3], &error);
 	table->t_sleep = ft_atoi_checker(argv[4], &error);
-	if (argv[5] != NULL)
-		table->n_meals = ft_atoi_checker(argv[5], &error);
+	if (argc == 6)
+		table->n_meals = (int)ft_atoi_checker(argv[5], &error);
 	else
 		table->n_meals = -1;
 	if (error)
 	{
-		printf("Params must be positive integers.\n");
+		printf("Error: Parameters must be positive integers\n");
 		return (0);
 	}
 	return (1);
 }
 
-t_table	*parser(int argc, char **argv)
+int	parse_arguments(int argc, char **argv, t_table *table)
 {
-	t_table	*table;
-
 	if (!validate_args(argc, argv))
-		return (NULL);
-	table = malloc(sizeof(t_table));
-	if (!table)
-		return (NULL);
-	if (!fill_table(table, argv))
-	{
-		free(table);
-		return (NULL);
-	}
-	return (table);
+		return (1);
+	if (!fill_table(table, argc, argv))
+		return (1);
+	return (0);
 }

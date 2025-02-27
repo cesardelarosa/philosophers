@@ -1,28 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   print_state.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/25 17:21:04 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/25 20:54:54 by cesi             ###   ########.fr       */
+/*   Created: 2025/02/27 10:53:09 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/02/27 10:53:10 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int argc, char **argv)
+void	print_state(t_philo *philo, const char *state)
 {
-	t_table	table;
+	long	timestamp;
 
-	memset(&table, 0, sizeof(t_table));
-	if (parse_arguments(argc, argv, &table))
-		return (error_handler("Invalid arguments", &table));
-	if (init_simulation(&table))
-		return (error_handler("Simulation init failed", &table));
-	if (run_simulation(&table))
-		return (error_handler("Runtime error", &table));
-	clean_resources(&table);
-	return (0);
+	pthread_mutex_lock(&philo->table->print_mtx);
+	timestamp = get_time() - philo->table->start_time;
+	if (!check_stop(philo->table))
+		printf("%-6ld %-3d %s\n", timestamp, philo->id, state);
+	pthread_mutex_unlock(&philo->table->print_mtx);
 }

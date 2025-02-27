@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   actions.h                                          :+:      :+:    :+:   */
+/*   to_sleep.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/24 11:06:35 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/25 17:26:06 by cde-la-r         ###   ########.fr       */
+/*   Created: 2025/02/26 14:31:45 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/02/26 17:20:33 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ACTIONS_H
-# define ACTIONS_H
+#include "philo.h"
 
-# include "philo.h"
-
-void	to_eat(t_philosopher *philo);
-void	to_sleep(t_philosopher *philo);
-void	to_think(t_philosopher *philo);
-long	get_time_in_ms(void);
-
-#endif
+void	to_sleep(t_philo *philo)
+{
+	print_state(philo, "is sleeping");
+	precise_usleep(philo->table->t_sleep);
+}
