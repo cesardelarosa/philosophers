@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 17:10:49 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/27 13:17:27 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/02/28 15:12:09 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ static int	check_philosopher(t_philo *philo, t_table *table)
 	int	ret;
 
 	ret = 0;
-	if (table->n_meals >= 0 && read_meals_eaten(philo) >= table->n_meals)
+	if (table->n_meals >= 0
+		&& read_meals_eaten(philo) >= (unsigned int)table->n_meals)
 		ret = 1;
 	else if ((unsigned int)(get_time() - read_meal_time(philo)) >= table->t_die)
 	{
