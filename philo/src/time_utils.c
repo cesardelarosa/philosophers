@@ -37,34 +37,23 @@ void	set_stop(t_table *table, bool value)
 	pthread_mutex_unlock(&table->stop_mtx);
 }
 
-static uint64_t	get_time_usec(void)
-{
-	struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000000ULL) + tv.tv_usec);
-}
-
-void	precise_usleep(unsigned int ms)
+bool	philo_sleep(t_philo *philo, unsigned int ms)
 {
 	uint64_t	start;
-	uint64_t	target;
-	uint64_t	current;
-	long		remaining;
 
-	start = get_time_usec();
-	target = start + (ms * MS);
-	while (1)
+	start = get_time();
+	while ((get_time() - start) < ms)
 	{
-		current = get_time_usec();
-		if (current >= target)
-			break ;
-		remaining = target - current;
-		if (remaining > 1000)
-			usleep(remaining / 2);
-		else if (remaining > 300)
-			usleep(remaining - 200);
-		else if (remaining > 50)
-			usleep(1);
+		if (check_stop(philo->table))
+			return (false);
+		if ((unsigned int)(get_time() - read_meal_time(philo))
+			>= philo->table->t_die)
+		{
+			print_state(philo, "died");
+			set_stop(philo->table, true);
+			return (false);
+		}
+		usleep(100);
 	}
+	return (true);
 }

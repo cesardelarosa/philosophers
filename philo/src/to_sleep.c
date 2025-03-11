@@ -17,5 +17,5 @@ void	to_sleep(t_philo *philo)
 	if (check_stop(philo->table))
 		return ;
 	print_state(philo, "is sleeping");
-	precise_usleep(philo->table->t_sleep);
+	philo_sleep(philo, philo->table->t_sleep);
 }

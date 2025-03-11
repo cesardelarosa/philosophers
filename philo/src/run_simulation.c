@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:08:29 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/26 14:15:26 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/11 11:10:43 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,6 @@ int	run_simulation(t_table *table)
 		join_philo_threads(table, created);
 		return (1);
 	}
-	if (pthread_create(&table->monitor, NULL, monitor_routine, table) != 0)
-	{
-		set_stop(table, true);
-		join_philo_threads(table, created);
-		return (1);
-	}
 	join_philo_threads(table, created);
-	pthread_join(table->monitor, NULL);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:11:27 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/27 13:18:00 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:12:25 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,13 @@ void				clean_resources(t_table *table);
 void				destroy_philos(t_table *table, unsigned int n_created);
 void				destroy_forks(t_table *table, unsigned int n_created);
 uint64_t			get_time(void);
+bool				philo_sleep(t_philo *philo, unsigned int ms);
 void				precise_usleep(unsigned int ms);
 int					error_handler(const char *msg, t_table *table);
 void				print_state(t_philo *philo, const char *state);
 bool				check_stop(t_table *table);
 void				set_stop(t_table *table, bool value);
 void				*philosopher_routine(void *arg);
-void				*monitor_routine(void *arg);
 void				update_meal_time(t_philo *philo);
 uint64_t			read_meal_time(t_philo *philo);
 unsigned int		read_meals_eaten(t_philo *philo);

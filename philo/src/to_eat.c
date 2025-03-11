@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 17:17:19 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/27 14:13:26 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/11 11:17:39 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	to_eat(t_philo *philo)
 	if (philo->table->n_philos == 1)
 	{
 		take_fork(philo, philo->right_fork);
-		precise_usleep(philo->table->t_die + 1);
+		philo_sleep(philo, philo->table->t_die + 1);
 		pthread_mutex_unlock(&philo->right_fork->mtx);
 		return ;
 	}
@@ -49,7 +49,12 @@ void	to_eat(t_philo *philo)
 	take_fork(philo, second);
 	print_state(philo, "is eating");
 	update_meal_time(philo);
-	precise_usleep(philo->table->t_eat);
+	if (!philo_sleep(philo, philo->table->t_eat))
+	{
+		pthread_mutex_unlock(&second->mtx);
+		pthread_mutex_unlock(&first->mtx);
+		return ;
+	}
 	add_meal(philo);
 	pthread_mutex_unlock(&second->mtx);
 	pthread_mutex_unlock(&first->mtx);

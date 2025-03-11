@@ -18,5 +18,5 @@ void	to_think(t_philo *philo, unsigned int t_think)
 		return ;
 	print_state(philo, "is thinking");
 	if (t_think > 0)
-		precise_usleep(t_think);
+		philo_sleep(philo, t_think);
 }
