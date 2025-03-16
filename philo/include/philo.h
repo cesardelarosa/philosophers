@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:11:27 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/11 11:12:25 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/03/16 13:28:25 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ typedef struct s_table
 }					t_table;
 
 int					parse_arguments(int argc, char **argv, t_table *table);
-int					init_philosophers(t_table *table);
 int					init_simulation(t_table *table);
 int					run_simulation(t_table *table);
 void				clean_resources(t_table *table);
