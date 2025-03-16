@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 21:01:14 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/16 13:27:22 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/16 18:30:43 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@ static int	init_mutexes(t_table *table)
 	if (pthread_mutex_init(&table->stop_mtx, NULL) != 0)
 		return (1);
 	table->stop_mtx_init = 1;
+	if (pthread_mutex_init(&table->full_mtx, NULL) != 0)
+		return (1);
+	table->full_mtx_init = 1;
 	return (0);
 }
 

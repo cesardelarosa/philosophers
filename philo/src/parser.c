@@ -6,11 +6,14 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 19:56:34 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/27 11:14:03 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/16 14:20:45 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+#define ARGS "number_of_philosophers time_to_die time_to_eat time_to_sleep"
+#define OPT_ARG "[number_of_times_each_philosopher_must_eat]"
 
 static unsigned int	ft_atoui_checker(const char *str, int *error)
 {

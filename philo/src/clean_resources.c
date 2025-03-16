@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 20:54:24 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/27 11:17:27 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/16 18:30:13 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,17 @@ void	clean_resources(t_table *table)
 		pthread_mutex_destroy(&table->print_mtx);
 	if (table->stop_mtx_init)
 		pthread_mutex_destroy(&table->stop_mtx);
+	if (table->full_mtx_init)
+		pthread_mutex_destroy(&table->full_mtx);
 	destroy_forks(table, table->n_philos);
 	destroy_philos(table, table->n_philos);
+}
+
+int	error_handler(const char *msg, t_table *table)
+{
+	if (msg)
+		printf("\033[1;31mError: %s\033[0m\n", msg);
+	if (table)
+		clean_resources(table);
+	return (1);
 }

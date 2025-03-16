@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 21:05:55 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/25 21:07:05 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/16 18:50:37 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,16 @@ void	set_stop(t_table *table, bool value)
 	pthread_mutex_unlock(&table->stop_mtx);
 }
 
+unsigned int	check_n_full(t_table *table)
+{
+	unsigned int	n_full;
+
+	pthread_mutex_lock(&table->full_mtx);
+	n_full = table->full_count;
+	pthread_mutex_unlock(&table->full_mtx);
+	return (n_full);
+}
+
 bool	philo_sleep(t_philo *philo, unsigned int ms)
 {
 	uint64_t	start;
@@ -50,6 +60,12 @@ bool	philo_sleep(t_philo *philo, unsigned int ms)
 			>= philo->table->t_die)
 		{
 			print_state(philo, "died");
+			set_stop(philo->table, true);
+			return (false);
+		}
+		if (philo->table->n_meals != -1
+			&& check_n_full(philo->table) == philo->table->n_philos)
+		{
 			set_stop(philo->table, true);
 			return (false);
 		}
