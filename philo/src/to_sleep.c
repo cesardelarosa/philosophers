@@ -5,17 +5,17 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 14:31:45 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/02/26 17:20:33 by cesi             ###   ########.fr       */
+/*   Created: 2025/03/17 22:47:20 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/03/18 12:53:08 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "action_utils.h"
 
-void	to_sleep(t_philo *philo)
+bool	to_sleep(t_philo *philo)
 {
-	if (check_stop(philo->table))
-		return ;
+	if (!check_philo(philo))
+		return (false);
 	print_state(philo, "is sleeping");
-	philo_sleep(philo, philo->table->t_sleep);
+	return (philo_sleep(philo, philo->table->t_sleep));
 }

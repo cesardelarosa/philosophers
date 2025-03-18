@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.h                                            :+:      :+:    :+:   */
+/*   actions.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:11:27 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/18 15:40:20 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/18 13:14:01 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef ACTIONS_H
+# define ACTIONS_H
 
 # include "structs.h"
 
-uint64_t			get_time(void);
-void				set_stop(t_table *table, bool value);
+bool				to_eat(t_philo *philo);
+bool				to_sleep(t_philo *philo);
+bool				to_think(t_philo *philo);
 
 #endif

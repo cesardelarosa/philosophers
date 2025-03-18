@@ -1,21 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.h                                            :+:      :+:    :+:   */
+/*   init_utils.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:11:27 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/18 15:40:20 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/18 14:38:31 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef INIT_UTILS_H
+# define INIT_UTILS_H
 
 # include "structs.h"
 
-uint64_t			get_time(void);
-void				set_stop(t_table *table, bool value);
+# define PHILO_MAX 200
+
+void				destroy_philos(t_table *table, unsigned int n_created);
+void				destroy_forks(t_table *table, unsigned int n_created);
 
 #endif

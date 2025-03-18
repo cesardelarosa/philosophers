@@ -6,11 +6,14 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 20:54:24 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/16 18:30:13 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/17 12:03:32 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "structs.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
 
 void	destroy_forks(t_table *table, unsigned int n_created)
 {

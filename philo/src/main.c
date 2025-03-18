@@ -17,11 +17,11 @@ int	main(int argc, char **argv)
 	t_table	table;
 
 	memset(&table, 0, sizeof(t_table));
-	if (parse_arguments(argc, argv, &table))
+	if (!parse_arguments(argc, argv, &table))
 		return (error_handler("Invalid arguments", &table));
-	if (init_simulation(&table))
+	if (!init_simulation(&table))
 		return (error_handler("Simulation init failed", &table));
-	if (run_simulation(&table))
+	if (!run_simulation(&table))
 		return (error_handler("Runtime error", &table));
 	clean_resources(&table);
 	return (0);

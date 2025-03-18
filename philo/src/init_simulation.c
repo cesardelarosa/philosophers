@@ -6,11 +6,11 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 21:01:14 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/16 18:30:43 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/18 14:21:55 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "init_utils.h"
 
 static int	init_forks(t_table *table)
 {
@@ -85,16 +85,15 @@ static int	init_philosophers(t_table *table)
 	return (0);
 }
 
-int	init_simulation(t_table *table)
+bool	init_simulation(t_table *table)
 {
 	if (table->n_philos < 1 || table->n_philos > PHILO_MAX)
-		return (error_handler("Invalid philosophers number", table));
+		return (false);
 	if (init_mutexes(table))
-		return (error_handler("Mutex initialization failed", table));
+		return (false);
 	if (init_forks(table))
-		return (error_handler("Forks initialization failed", table));
+		return (false);
 	if (init_philosophers(table))
-		return (error_handler("Philosophers initialization failed", table));
-	table->stop = false;
-	return (0);
+		return (false);
+	return (true);
 }
