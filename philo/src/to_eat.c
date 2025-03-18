@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:10:07 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/18 13:08:55 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/18 19:47:49 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	add_meal(t_philo *philo)
 	pthread_mutex_unlock(&philo->meal_mtx);
 }
 
-static void	assing_forks(t_philo *philo, t_fork *forks[2])
+static void	assign_forks(t_philo *philo, t_fork *forks[2])
 {
 	if (philo->left_fork->id < philo->right_fork->id)
 	{
@@ -66,13 +66,13 @@ bool	to_eat(t_philo *philo)
 		pthread_mutex_unlock(&philo->right_fork->mtx);
 		return (false);
 	}
-	assing_forks(philo, forks);
+	assign_forks(philo, forks);
 	pthread_mutex_lock(&forks[0]->mtx);
 	print_state(philo, "has taken a fork");
 	pthread_mutex_lock(&forks[1]->mtx);
 	print_state(philo, "has taken a fork");
-	print_state(philo, "is eating");
 	update_meal_time(philo);
+	print_state(philo, "is eating");
 	add_meal(philo);
 	r = philo_sleep(philo, philo->table->t_eat);
 	pthread_mutex_unlock(&forks[1]->mtx);

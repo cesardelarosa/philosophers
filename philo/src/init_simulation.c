@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 21:01:14 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/18 14:21:55 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/18 19:21:58 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ static int	init_philosophers(t_table *table)
 		table->philos[i].id = i + 1;
 		table->philos[i].meals_eaten = 0;
 		table->philos[i].last_meal = 0;
+		table->philos[i].full = false;
 		table->philos[i].table = table;
 		table->philos[i].left_fork = &table->forks[i];
 		table->philos[i].right_fork = &table->forks[(i + 1) % table->n_philos];

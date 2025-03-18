@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:11:27 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/18 15:38:25 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/18 17:58:53 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "structs.h"
 
 bool				philo_sleep(t_philo *philo, unsigned int ms);
-void				print_state(t_philo *philo, const char *state);
+bool				print_state(t_philo *philo, const char *state);
 bool				check_philo(t_philo *philo);
 
 #endif
