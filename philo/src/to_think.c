@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:45 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/16 19:15:07 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/16 19:29:45 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,9 @@
 
 static unsigned int	calc_think_time(t_philo *philo)
 {
-	unsigned int	elapsed;
-
-	if (philo->meals_eaten == 0 && philo->id % 2 == 0)
-		return (1);
-	elapsed = (unsigned int)(get_time() - read_meal_time(philo));
-	return ((philo->table->t_die - elapsed - philo->table->t_eat) / 2 + 1);
+	if (philo->meals_eaten == 0 && (philo->id + philo->meals_eaten) % 2 == 0)
+		return (philo->table->t_eat - 1);
+	return (0);
 }
 
 void	to_think(t_philo *philo)
