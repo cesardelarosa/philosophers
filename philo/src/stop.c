@@ -1,22 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   action_utils.h                                     :+:      :+:    :+:   */
+/*   stop.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/24 10:11:27 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/18 17:58:53 by cesi             ###   ########.fr       */
+/*   Created: 2025/03/20 22:59:12 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/03/20 22:59:13 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ACTION_UTILS_H
-# define ACTION_UTILS_H
+#include "philo.h"
 
-# include "structs.h"
+void	stop(t_table *table)
+{
+	pthread_mutex_lock(&table->stop_mtx);
+	table->stop = true;
+	pthread_mutex_unlock(&table->stop_mtx);
+}
 
-bool				philo_sleep(t_philo *philo, unsigned int ms);
-bool				print_state(t_philo *philo, const char *state);
-bool				check_philo(t_philo *philo);
+bool	check_stop(t_table *table)
+{
+	bool	stop_state;
 
-#endif
+	pthread_mutex_lock(&table->stop_mtx);
+	stop_state = table->stop;
+	pthread_mutex_unlock(&table->stop_mtx);
+	return (stop_state);
+}

@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   common.h                                           :+:      :+:    :+:   */
+/*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/16 17:51:29 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/16 17:51:32 by cde-la-r         ###   ########.fr       */
+/*   Created: 2025/02/25 20:45:14 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/02/27 10:52:31 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COMMON_H
-# define COMMON_H
+#include "philo.h"
 
-# include <limits.h>
-# include <pthread.h>
-# include <stdbool.h>
-# include <stdint.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <sys/time.h>
-# include <unistd.h>
-
-#endif
+int	error_handler(const char *msg, t_table *table)
+{
+	if (msg)
+		printf("\033[1;31mError: %s\033[0m\n", msg);
+	if (table)
+		clean_resources(table);
+	return (1);
+}

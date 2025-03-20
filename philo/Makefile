@@ -28,11 +28,10 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR)
 
 clean:
 	@printf "$(RED)[CLEAN] Eliminando archivos objeto...$(RESET)\n"
-	rm -f $(OBJS)
 	rm -rf $(OBJ_DIR)
 	@printf "$(GREEN)[OK] ✅ Limpieza completada.$(RESET)\n"
 

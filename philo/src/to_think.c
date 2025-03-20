@@ -5,16 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 22:47:20 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/18 19:22:46 by cesi             ###   ########.fr       */
+/*   Created: 2025/03/20 22:59:39 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/03/20 22:59:40 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "action_utils.h"
+#include "philo.h"
 
 bool	to_think(t_philo *philo)
 {
-	if (!check_philo(philo))
+	if (check_stop(philo->table))
 		return (false);
 	print_state(philo, "is thinking");
 	return (true);

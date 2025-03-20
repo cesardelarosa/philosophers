@@ -5,77 +5,130 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/27 13:10:07 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/18 19:47:49 by cesi             ###   ########.fr       */
+/*   Created: 2025/03/20 22:59:24 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/03/20 23:32:52 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "action_utils.h"
 #include "philo.h"
 
-static void	update_meal_time(t_philo *philo)
+static bool	handle_single_philo(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->meal_mtx);
-	philo->last_meal = get_time();
-	pthread_mutex_unlock(&philo->meal_mtx);
-}
+	t_table	*table;
 
-static void	add_meal(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->meal_mtx);
-	philo->meals_eaten++;
-	if (philo->table->n_meals != -1
-		&& philo->meals_eaten == (unsigned int)philo->table->n_meals
-		&& !philo->full)
+	table = philo->table;
+	pthread_mutex_lock(&table->forks_avail_mtx);
+	if (table->forks[0].taken == 0)
 	{
-		philo->full = true;
-		pthread_mutex_lock(&philo->table->full_mtx);
-		if (++philo->table->full_count == philo->table->n_philos)
-			set_stop(philo->table, true);
-		pthread_mutex_unlock(&philo->table->full_mtx);
-	}
-	pthread_mutex_unlock(&philo->meal_mtx);
-}
-
-static void	assign_forks(t_philo *philo, t_fork *forks[2])
-{
-	if (philo->left_fork->id < philo->right_fork->id)
-	{
-		forks[0] = philo->left_fork;
-		forks[1] = philo->right_fork;
+		table->forks[0].taken = 1;
+		pthread_mutex_unlock(&table->forks_avail_mtx);
+		print_state(philo, "has taken a fork");
 	}
 	else
+		pthread_mutex_unlock(&table->forks_avail_mtx);
+	philo_sleep(philo, table->t_die);
+	pthread_mutex_lock(&table->forks_avail_mtx);
+	table->forks[0].taken = 0;
+	pthread_mutex_unlock(&table->forks_avail_mtx);
+	check_death(philo);
+	return (false);
+}
+
+static uint64_t	calc_wait_time(t_philo *philo)
+{
+	uint64_t		current;
+	uint64_t		elapsed;
+	uint64_t		remaining;
+	uint64_t		wait_time;
+	t_table			*table;
+
+	table = philo->table;
+	current = get_time();
+	elapsed = current - read_meal_time(philo);
+	if (table->t_die <= elapsed)
+		return (0);
+	remaining = table->t_die - elapsed;
+	if (remaining >= 100)
+		wait_time = remaining / 10;
+	else
+		wait_time = (remaining / 10 + ((100 - remaining) * remaining) / 1000);
+	if (wait_time < 1)
+		wait_time = 1;
+	if (wait_time > remaining)
+		wait_time = remaining;
+	return (wait_time);
+}
+
+static bool	acquire_forks(t_philo *philo)
+{
+	t_table	*table;
+
+	table = philo->table;
+	while (philo_sleep(philo, calc_wait_time(philo)))
 	{
-		forks[0] = philo->right_fork;
-		forks[1] = philo->left_fork;
+		pthread_mutex_lock(&table->forks_avail_mtx);
+		if (table->forks[philo->left_index].taken == 0
+			&& table->forks[philo->right_index].taken == 0)
+		{
+			table->forks[philo->left_index].taken = 1;
+			table->forks[philo->right_index].taken = 1;
+			pthread_mutex_unlock(&table->forks_avail_mtx);
+			print_state(philo, "has taken a fork");
+			print_state(philo, "has taken a fork");
+			return (true);
+		}
+		pthread_mutex_unlock(&table->forks_avail_mtx);
+	}
+	return (false);
+}
+
+void	update_full_count(t_philo *philo)
+{
+	t_table	*table;
+
+	table = philo->table;
+	if (table->n_meals != -1)
+	{
+		if (philo->meals_eaten == (unsigned int)table->n_meals
+			&& philo->full == false)
+		{
+			philo->full = true;
+			pthread_mutex_lock(&table->full_mtx);
+			table->full_count++;
+			if (table->full_count == table->n_philos)
+			{
+				pthread_mutex_unlock(&table->full_mtx);
+				stop(table);
+			}
+			else
+				pthread_mutex_unlock(&table->full_mtx);
+		}
 	}
 }
 
 bool	to_eat(t_philo *philo)
 {
-	t_fork	*forks[2];
+	t_table	*table;
 	bool	r;
 
-	if (!check_philo(philo))
+	table = philo->table;
+	if (check_stop(table))
 		return (false);
-	if (philo->left_fork->id == philo->right_fork->id)
-	{
-		pthread_mutex_lock(&philo->right_fork->mtx);
-		print_state(philo, "has taken a fork");
-		philo_sleep(philo, philo->table->t_die + 1);
-		pthread_mutex_unlock(&philo->right_fork->mtx);
+	if (table->n_philos == 1)
+		return (handle_single_philo(philo));
+	if (!acquire_forks(philo))
 		return (false);
-	}
-	assign_forks(philo, forks);
-	pthread_mutex_lock(&forks[0]->mtx);
-	print_state(philo, "has taken a fork");
-	pthread_mutex_lock(&forks[1]->mtx);
-	print_state(philo, "has taken a fork");
-	update_meal_time(philo);
 	print_state(philo, "is eating");
-	add_meal(philo);
-	r = philo_sleep(philo, philo->table->t_eat);
-	pthread_mutex_unlock(&forks[1]->mtx);
-	pthread_mutex_unlock(&forks[0]->mtx);
+	update_meal_time(philo);
+	r = philo_sleep(philo, table->t_eat);
+	if (r)
+	{
+		philo->meals_eaten++;
+		update_full_count(philo);
+	}
+	pthread_mutex_lock(&table->forks_avail_mtx);
+	table->forks[philo->left_index].taken = 0;
+	table->forks[philo->right_index].taken = 0;
+	pthread_mutex_unlock(&table->forks_avail_mtx);
 	return (r);
 }

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/20 22:05:51 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/20 22:05:52 by cde-la-r         ###   ########.fr       */
+/*   Created: 2025/02/25 17:21:04 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/02/25 20:54:54 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,12 @@ int	main(int argc, char **argv)
 	t_table	table;
 
 	memset(&table, 0, sizeof(t_table));
-	if (!parse_arguments(argc, argv, &table))
-	{
-		write(2, "Invalid arguments\n", 18);
-		return (1);
-	}
-	if (!init_simulation(&table))
-	{
-		write(2, "Simulation initialization failed\n", 34);
-		clean_resources(&table);
-		return (1);
-	}
-	if (run_simulation(&table) != 0)
-	{
-		write(2, "Simulation encountered an error\n", 33);
-		clean_resources(&table);
-		return (1);
-	}
+	if (parse_arguments(argc, argv, &table))
+		return (error_handler("Invalid arguments", &table));
+	if (init_simulation(&table))
+		return (error_handler("Simulation init failed", &table));
+	if (run_simulation(&table))
+		return (error_handler("Runtime error", &table));
 	clean_resources(&table);
 	return (0);
 }

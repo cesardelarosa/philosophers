@@ -5,26 +5,88 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/25 21:05:55 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/18 13:06:18 by cesi             ###   ########.fr       */
+/*   Created: 2025/03/20 22:59:18 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/03/20 23:43:53 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-#define MS 1000
 
 uint64_t	get_time(void)
 {
 	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * (uint64_t)MS) + (tv.tv_usec / MS));
+	return (tv.tv_sec * 1000000ULL + tv.tv_usec);
 }
 
-void	set_stop(t_table *table, bool value)
+void	update_meal_time(t_philo *philo)
 {
-	pthread_mutex_lock(&table->stop_mtx);
-	table->stop = value;
-	pthread_mutex_unlock(&table->stop_mtx);
+	pthread_mutex_lock(&philo->meal_mtx);
+	philo->last_meal = get_time();
+	pthread_mutex_unlock(&philo->meal_mtx);
 }
+
+uint64_t	read_meal_time(t_philo *philo)
+{
+	uint64_t	last_meal;
+
+	pthread_mutex_lock(&philo->meal_mtx);
+	last_meal = philo->last_meal;
+	pthread_mutex_unlock(&philo->meal_mtx);
+	return (last_meal);
+}
+
+bool	philo_sleep(t_philo *philo, uint64_t us)
+{
+	uint64_t	start;
+	uint64_t	available;
+	uint64_t	duration;
+	uint64_t	remaining;
+
+	start = get_time();
+	available = philo->table->t_die - (start - read_meal_time(philo));
+	if (us >= available)
+		duration = available;
+	else
+		duration = us;
+	while (get_time() - start < duration)
+	{
+		if (check_stop(philo->table))
+			return (false);
+		remaining = duration - (get_time() - start);
+		if (remaining < 100)
+			usleep(remaining);
+		else
+			usleep(100);
+	}
+	return (!check_death(philo));
+}
+
+/*
+bool	philo_sleep(t_philo *philo, uint64_t us)
+{
+	uint64_t	start;
+	uint64_t	available;
+
+	start = get_time();
+	available = philo->table->t_die - (start - read_meal_time(philo));
+	if (us >= available)
+	{
+		while (get_time() - start < available)
+		{
+			if (check_stop(philo->table))
+				return (false);
+			usleep(100);
+		}
+		return (!check_death(philo));
+	}
+	while (get_time() - start < us)
+	{
+		if (check_stop(philo->table))
+			return (false);
+		usleep(100);
+	}
+	return (!check_death(philo));
+}
+*/
