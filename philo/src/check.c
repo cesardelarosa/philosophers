@@ -12,6 +12,16 @@
 
 #include "philo.h"
 
+bool	check_stop(t_table *table)
+{
+	bool	stop_state;
+
+	pthread_mutex_lock(&table->stop_mtx);
+	stop_state = table->stop;
+	pthread_mutex_unlock(&table->stop_mtx);
+	return (stop_state);
+}
+
 bool	check_death(t_philo *philo)
 {
 	uint64_t	current;

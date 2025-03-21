@@ -20,13 +20,6 @@ uint64_t	get_time(void)
 	return (tv.tv_sec * 1000000ULL + tv.tv_usec);
 }
 
-void	update_meal_time(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->meal_mtx);
-	philo->last_meal = get_time();
-	pthread_mutex_unlock(&philo->meal_mtx);
-}
-
 uint64_t	read_meal_time(t_philo *philo)
 {
 	uint64_t	last_meal;
@@ -62,31 +55,3 @@ bool	philo_sleep(t_philo *philo, uint64_t us)
 	}
 	return (!check_death(philo));
 }
-
-/*
-bool	philo_sleep(t_philo *philo, uint64_t us)
-{
-	uint64_t	start;
-	uint64_t	available;
-
-	start = get_time();
-	available = philo->table->t_die - (start - read_meal_time(philo));
-	if (us >= available)
-	{
-		while (get_time() - start < available)
-		{
-			if (check_stop(philo->table))
-				return (false);
-			usleep(100);
-		}
-		return (!check_death(philo));
-	}
-	while (get_time() - start < us)
-	{
-		if (check_stop(philo->table))
-			return (false);
-		usleep(100);
-	}
-	return (!check_death(philo));
-}
-*/

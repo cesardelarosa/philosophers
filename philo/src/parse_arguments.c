@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:06:04 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/20 22:53:26 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/03/21 09:30:56 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ bool	parse_arguments(int argc, char **argv, t_table *table)
 		table->n_meals = (long)ft_atoui(argv[5], &error);
 	else
 		table->n_meals = -1;
-	if (error || table->n_philos < 1)
+	if (error)
 	{
-		write(2, "Arguments must be non negative numbers", 27);
+		printf("Arguments must be non negative numbers\n");
 		return (false);
 	}
 	return (true);

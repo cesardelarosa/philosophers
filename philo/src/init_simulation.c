@@ -55,16 +55,8 @@ static bool	init_philosophers(t_table *table)
 		memset(&table->philos[i], 0, sizeof(t_philo));
 		table->philos[i].id = i + 1;
 		table->philos[i].table = table;
-		if (i % 2 == 0)
-		{
-			table->philos[i].left_index = i;
-			table->philos[i].right_index = (i + 1) % table->n_philos;
-		}
-		else
-		{
-			table->philos[i].left_index = (i + 1) % table->n_philos;
-			table->philos[i].right_index = i;
-		}
+		table->philos[i].left_index = i;
+		table->philos[i].right_index = (i + 1) % table->n_philos;
 		pthread_mutex_init(&table->philos[i++].meal_mtx, NULL);
 	}
 	return (true);
@@ -72,8 +64,6 @@ static bool	init_philosophers(t_table *table)
 
 bool	init_simulation(t_table *table)
 {
-	if (table->n_philos < 1)
-		return (false);
 	if (!init_mutexes(table))
 		return (false);
 	if (!init_forks(table))

@@ -12,13 +12,25 @@
 
 #include "philo.h"
 
+static void	stop(t_table *table)
+{
+	pthread_mutex_lock(&table->stop_mtx);
+	table->stop = true;
+	pthread_mutex_unlock(&table->stop_mtx);
+}
+
 static void	*philosopher_routine(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while (to_think(philo) && to_eat(philo) && to_sleep(philo))
-		;
+	while (to_think(philo)
+		&& take_forks(philo)
+		&& to_eat(philo)
+		&& put_forks(philo)
+		&& to_sleep(philo))
+		continue ;
+	stop(philo->table);
 	return (NULL);
 }
 

@@ -63,17 +63,19 @@ bool					parse_arguments(int argc, char **argv, t_table *table);
 bool					init_simulation(t_table *table);
 void					clean_resources(t_table *table);
 int						run_simulation(t_table *table);
+
 uint64_t				get_time(void);
 bool					philo_sleep(t_philo *philo, uint64_t us);
-void					update_meal_time(t_philo *philo);
 uint64_t				read_meal_time(t_philo *philo);
+
 bool					to_eat(t_philo *philo);
 bool					to_sleep(t_philo *philo);
 bool					to_think(t_philo *philo);
+bool					take_forks(t_philo *philo);
+bool					put_forks(t_philo *philo);
 void					print_state(t_philo *philo, const char *state);
-void					stop(t_table *table);
+
 bool					check_stop(t_table *table);
 bool					check_death(t_philo *philo);
-void					update_full_count(t_philo *philo);
 
 #endif
