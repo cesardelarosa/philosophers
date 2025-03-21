@@ -42,6 +42,25 @@ static bool	init_forks(t_table *table)
 	return (true);
 }
 
+static void	assign_forks(t_philo *philo, t_table *table, unsigned int i)
+{
+	int	left;
+	int	right;
+
+	left = i;
+	right = (i + 1) % table->n_philos;
+	if (left < right)
+	{
+		philo->first_fork = &table->forks[left];
+		philo->second_fork = &table->forks[right];
+	}
+	else
+	{
+		philo->first_fork = &table->forks[right];
+		philo->second_fork = &table->forks[left];
+	}
+}
+
 static bool	init_philosophers(t_table *table)
 {
 	unsigned int	i;
@@ -55,17 +74,9 @@ static bool	init_philosophers(t_table *table)
 		memset(&table->philos[i], 0, sizeof(t_philo));
 		table->philos[i].id = i + 1;
 		table->philos[i].table = table;
-		if (i < (i + 1) % table->n_philos)
-		{
-			table->philos[i].first_fork = i;
-			table->philos[i].second_fork = (i + 1) % table->n_philos;
-		}
-		else
-		{
-			table->philos[i].first_fork = (i + 1) % table->n_philos;
-			table->philos[i].second_fork = i;
-		}
-		pthread_mutex_init(&table->philos[i++].meal_mtx, NULL);
+		assign_forks(&table->philos[i], table, i);
+		pthread_mutex_init(&table->philos[i].meal_mtx, NULL);
+		i++;
 	}
 	return (true);
 }

@@ -17,19 +17,19 @@ static bool	handle_single_philo(t_philo *philo)
 	t_table	*table;
 
 	table = philo->table;
-	pthread_mutex_lock(&table->forks[philo->first_fork].mtx);
-	if (table->forks[philo->first_fork].taken == 0)
+	pthread_mutex_lock(&philo->first_fork->mtx);
+	if (philo->first_fork->taken == 0)
 	{
-		table->forks[philo->first_fork].taken = 1;
-		pthread_mutex_unlock(&table->forks[philo->first_fork].mtx);
+		philo->first_fork->taken = 1;
+		pthread_mutex_unlock(&philo->first_fork->mtx);
 		print_state(philo, "has taken a fork");
 	}
 	else
-		pthread_mutex_unlock(&table->forks[philo->first_fork].mtx);
+		pthread_mutex_unlock(&philo->first_fork->mtx);
 	smart_sleep(philo, table->t_die);
-	pthread_mutex_lock(&table->forks[philo->first_fork].mtx);
-	table->forks[philo->first_fork].taken = 0;
-	pthread_mutex_unlock(&table->forks[philo->first_fork].mtx);
+	pthread_mutex_lock(&philo->first_fork->mtx);
+	philo->first_fork->taken = 0;
+	pthread_mutex_unlock(&philo->first_fork->mtx);
 	check_death(philo);
 	return (false);
 }
@@ -71,21 +71,20 @@ bool	take_forks(t_philo *philo)
 		return (handle_single_philo(philo));
 	while (smart_sleep(philo, calc_wait_time(philo)))
 	{
-		pthread_mutex_lock(&table->forks[philo->first_fork].mtx);
-		pthread_mutex_lock(&table->forks[philo->second_fork].mtx);
-		if (table->forks[philo->first_fork].taken == 0
-			&& table->forks[philo->second_fork].taken == 0)
+		pthread_mutex_lock(&philo->first_fork->mtx);
+		pthread_mutex_lock(&philo->second_fork->mtx);
+		if (philo->first_fork->taken == 0 && philo->second_fork->taken == 0)
 		{
-			table->forks[philo->first_fork].taken = 1;
-			table->forks[philo->second_fork].taken = 1;
-			pthread_mutex_unlock(&table->forks[philo->second_fork].mtx);
-			pthread_mutex_unlock(&table->forks[philo->first_fork].mtx);
+			philo->first_fork->taken = 1;
+			philo->second_fork->taken = 1;
+			pthread_mutex_unlock(&philo->second_fork->mtx);
+			pthread_mutex_unlock(&philo->first_fork->mtx);
 			print_state(philo, "has taken a fork");
 			print_state(philo, "has taken a fork");
 			return (true);
 		}
-		pthread_mutex_unlock(&table->forks[philo->second_fork].mtx);
-		pthread_mutex_unlock(&table->forks[philo->first_fork].mtx);
+		pthread_mutex_unlock(&philo->second_fork->mtx);
+		pthread_mutex_unlock(&philo->first_fork->mtx);
 	}
 	return (false);
 }

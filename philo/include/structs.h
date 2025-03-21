@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:45 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/21 22:57:15 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/03/21 23:17:17 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ typedef struct s_philo
 	int					id;
 	unsigned int		meals_eaten;
 	uint64_t			last_meal;
-	int					first_fork;
-	int					second_fork;
+	t_fork				*first_fork;
+	t_fork				*second_fork;
 	bool				full;
 	pthread_t			thread;
 	pthread_mutex_t		meal_mtx;

@@ -14,16 +14,13 @@
 
 bool	put_forks(t_philo *philo)
 {
-	t_table	*table;
-
-	table = philo->table;
-	if (check_stop(table))
+	if (check_stop(philo->table))
 		return (false);
-	pthread_mutex_lock(&table->forks[philo->first_fork].mtx);
-	pthread_mutex_lock(&table->forks[philo->second_fork].mtx);
-	table->forks[philo->first_fork].taken = 0;
-	table->forks[philo->second_fork].taken = 0;
-	pthread_mutex_unlock(&table->forks[philo->second_fork].mtx);
-	pthread_mutex_unlock(&table->forks[philo->first_fork].mtx);
+	pthread_mutex_lock(&philo->first_fork->mtx);
+	pthread_mutex_lock(&philo->second_fork->mtx);
+	philo->first_fork->taken = 0;
+	philo->second_fork->taken = 0;
+	pthread_mutex_unlock(&philo->second_fork->mtx);
+	pthread_mutex_unlock(&philo->first_fork->mtx);
 	return (true);
 }
