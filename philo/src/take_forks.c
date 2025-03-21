@@ -36,29 +36,28 @@ static bool	handle_single_philo(t_philo *philo)
 
 static uint64_t	calc_wait_time(t_philo *philo)
 {
-	uint64_t		current;
-	uint64_t		elapsed;
-	uint64_t		remaining;
-	uint64_t		wait_time;
-	t_table			*table;
+	uint64_t	current;
+	uint64_t	elapsed;
+	uint64_t	min_elapsed;
+	double		progress;
+	t_table		*table;
 
 	table = philo->table;
 	current = get_time();
 	elapsed = current - read_meal_time(philo);
-	if (table->t_die <= elapsed)
+	min_elapsed = table->t_eat + table->t_sleep;
+	if (elapsed >= table->t_die)
 		return (0);
-	remaining = table->t_die - elapsed;
-	if (remaining >= 1000)
-		wait_time = remaining / 50;
-	else if (remaining >= 100)
-		wait_time = remaining / 100;
+	if (elapsed <= min_elapsed)
+		return (1000);
+	if (table->t_die > min_elapsed)
+	{
+		progress = (double)(elapsed - min_elapsed) / (table->t_die
+				- min_elapsed);
+		return ((uint64_t)(1000 * (1.0 - (progress * progress))));
+	}
 	else
-		wait_time = (remaining / 10 + ((100 - remaining) * remaining) / 1000);
-	if (wait_time < 1)
-		wait_time = 1;
-	if (wait_time > remaining)
-		wait_time = remaining;
-	return (wait_time);
+		return (0);
 }
 
 bool	take_forks(t_philo *philo)
