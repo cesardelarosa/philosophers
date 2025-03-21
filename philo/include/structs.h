@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:45 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/21 11:23:39 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/21 22:57:15 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ typedef struct s_fork
 {
 	int					id;
 	int					taken;
+	pthread_mutex_t		mtx;
 }	t_fork;
 
 typedef struct s_philo
@@ -26,8 +27,8 @@ typedef struct s_philo
 	int					id;
 	unsigned int		meals_eaten;
 	uint64_t			last_meal;
-	int					left_index;
-	int					right_index;
+	int					first_fork;
+	int					second_fork;
 	bool				full;
 	pthread_t			thread;
 	pthread_mutex_t		meal_mtx;
@@ -48,7 +49,6 @@ typedef struct s_table
 	t_fork				*forks;
 	pthread_mutex_t		print_mtx;
 	pthread_mutex_t		stop_mtx;
-	pthread_mutex_t		forks_avail_mtx;
 	pthread_mutex_t		full_mtx;
 }	t_table;
 

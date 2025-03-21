@@ -19,9 +19,11 @@ bool	put_forks(t_philo *philo)
 	table = philo->table;
 	if (check_stop(table))
 		return (false);
-	pthread_mutex_lock(&table->forks_avail_mtx);
-	table->forks[philo->left_index].taken = 0;
-	table->forks[philo->right_index].taken = 0;
-	pthread_mutex_unlock(&table->forks_avail_mtx);
+	pthread_mutex_lock(&table->forks[philo->first_fork].mtx);
+	pthread_mutex_lock(&table->forks[philo->second_fork].mtx);
+	table->forks[philo->first_fork].taken = 0;
+	table->forks[philo->second_fork].taken = 0;
+	pthread_mutex_unlock(&table->forks[philo->second_fork].mtx);
+	pthread_mutex_unlock(&table->forks[philo->first_fork].mtx);
 	return (true);
 }

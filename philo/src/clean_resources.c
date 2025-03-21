@@ -34,6 +34,5 @@ void	clean_resources(t_table *table)
 	}
 	pthread_mutex_destroy(&table->print_mtx);
 	pthread_mutex_destroy(&table->stop_mtx);
-	pthread_mutex_destroy(&table->forks_avail_mtx);
 	pthread_mutex_destroy(&table->full_mtx);
 }

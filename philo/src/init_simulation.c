@@ -18,8 +18,6 @@ static bool	init_mutexes(t_table *table)
 		return (false);
 	if (pthread_mutex_init(&table->stop_mtx, NULL) != 0)
 		return (false);
-	if (pthread_mutex_init(&table->forks_avail_mtx, NULL) != 0)
-		return (false);
 	if (pthread_mutex_init(&table->full_mtx, NULL) != 0)
 		return (false);
 	return (true);
@@ -37,6 +35,8 @@ static bool	init_forks(t_table *table)
 	{
 		table->forks[i].id = i;
 		table->forks[i].taken = 0;
+		if (pthread_mutex_init(&table->forks[i].mtx, NULL) != 0)
+			return (false);
 		i++;
 	}
 	return (true);
@@ -55,8 +55,16 @@ static bool	init_philosophers(t_table *table)
 		memset(&table->philos[i], 0, sizeof(t_philo));
 		table->philos[i].id = i + 1;
 		table->philos[i].table = table;
-		table->philos[i].left_index = i;
-		table->philos[i].right_index = (i + 1) % table->n_philos;
+		if (i < (i + 1) % table->n_philos)
+		{
+			table->philos[i].first_fork = i;
+			table->philos[i].second_fork = (i + 1) % table->n_philos;
+		}
+		else
+		{
+			table->philos[i].first_fork = (i + 1) % table->n_philos;
+			table->philos[i].second_fork = i;
+		}
 		pthread_mutex_init(&table->philos[i++].meal_mtx, NULL);
 	}
 	return (true);
