@@ -6,11 +6,12 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:54:22 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/20 22:58:43 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:31:29 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include "actions.h"
 
 static void	stop(t_table *table)
 {

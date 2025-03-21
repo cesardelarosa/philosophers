@@ -6,11 +6,11 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:02:45 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/20 22:02:46 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:32:09 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "structs.h"
 
 void	clean_resources(t_table *table)
 {

@@ -6,11 +6,11 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:05:51 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/20 22:05:52 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:26:49 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "main.h"
 
 int	main(int argc, char **argv)
 {

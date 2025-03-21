@@ -30,7 +30,7 @@ uint64_t	read_meal_time(t_philo *philo)
 	return (last_meal);
 }
 
-bool	philo_sleep(t_philo *philo, uint64_t us)
+bool	smart_sleep(t_philo *philo, uint64_t us)
 {
 	uint64_t	start;
 	uint64_t	available;

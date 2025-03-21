@@ -1,21 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   to_sleep.c                                         :+:      :+:    :+:   */
+/*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/20 22:59:32 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/20 22:59:34 by cde-la-r         ###   ########.fr       */
+/*   Created: 2025/03/20 22:59:45 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/03/21 11:27:46 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#ifndef MAIN_H
+# define MAIN_H
 
-bool	to_sleep(t_philo *philo)
-{
-	if (check_stop(philo->table))
-		return (false);
-	print_state(philo, "is sleeping");
-	return (smart_sleep(philo, philo->table->t_sleep));
-}
+# include "structs.h"
+
+bool					parse_arguments(int argc, char **argv, t_table *table);
+bool					init_simulation(t_table *table);
+void					clean_resources(t_table *table);
+int						run_simulation(t_table *table);
+
+#endif

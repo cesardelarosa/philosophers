@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:24 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/21 10:50:46 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/21 11:25:22 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static bool	handle_single_philo(t_philo *philo)
 	}
 	else
 		pthread_mutex_unlock(&table->forks_avail_mtx);
-	philo_sleep(philo, table->t_die);
+	smart_sleep(philo, table->t_die);
 	pthread_mutex_lock(&table->forks_avail_mtx);
 	table->forks[0].taken = 0;
 	pthread_mutex_unlock(&table->forks_avail_mtx);
@@ -70,7 +70,7 @@ bool	take_forks(t_philo *philo)
 		return (false);
 	if (table->n_philos == 1)
 		return (handle_single_philo(philo));
-	while (philo_sleep(philo, calc_wait_time(philo)))
+	while (smart_sleep(philo, calc_wait_time(philo)))
 	{
 		pthread_mutex_lock(&table->forks_avail_mtx);
 		if (table->forks[philo->left_index].taken == 0

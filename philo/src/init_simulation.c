@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "structs.h"
 
 static bool	init_mutexes(t_table *table)
 {

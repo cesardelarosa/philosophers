@@ -43,7 +43,7 @@ bool	to_eat(t_philo *philo)
 		return (false);
 	print_state(philo, "is eating");
 	update_meal_time(philo);
-	return (philo_sleep(philo, table->t_eat)
+	return (smart_sleep(philo, table->t_eat)
 		&& (table->n_meals == -1
 			|| ++philo->meals_eaten < (unsigned int)table->n_meals
 			|| !is_full_count_update(philo)));
