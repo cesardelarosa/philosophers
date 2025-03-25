@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.h                                            :+:      :+:    :+:   */
+/*   get_time.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/20 22:59:45 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/25 20:57:01 by cesi             ###   ########.fr       */
+/*   Created: 2025/03/20 22:59:18 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/03/25 20:51:03 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#include <sys/time.h>
+#include <stdint.h>
+#include <stddef.h>
 
-# include "structs.h"
+uint64_t	get_time(void)
+{
+	struct timeval	tv;
 
-uint64_t				get_time(void);
-bool					smart_sleep(t_philo *philo, uint64_t us);
-bool					check_stop(t_table *table);
-void					print_state(t_philo *philo, const char *state);
-
-#endif
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000000ULL + tv.tv_usec);
+}

@@ -1,33 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   time_utils.c                                       :+:      :+:    :+:   */
+/*   smart_sleep.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:18 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/20 23:43:53 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/03/25 20:56:07 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#define THRESHOLD 1000
 
-uint64_t	get_time(void)
+static bool	check_death(t_philo *philo)
 {
-	struct timeval	tv;
+	uint64_t		current;
+	unsigned int	ms;
 
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000000ULL + tv.tv_usec);
-}
-
-uint64_t	read_meal_time(t_philo *philo)
-{
-	uint64_t	last_meal;
-
-	pthread_mutex_lock(&philo->meal_mtx);
-	last_meal = philo->last_meal;
-	pthread_mutex_unlock(&philo->meal_mtx);
-	return (last_meal);
+	current = get_time();
+	if (current - philo->last_meal >= philo->table->t_die)
+	{
+		lock_safe_mutex(&philo->table->print_mtx);
+		lock_safe_mutex(&philo->table->stop_mtx);
+		if (!philo->table->stop)
+		{
+			philo->table->stop = true;
+			ms = (current - philo->table->start_time) / 1000;
+			printf("%d %d died\n", ms, philo->id);
+		}
+		unlock_safe_mutex(&philo->table->stop_mtx);
+		unlock_safe_mutex(&philo->table->print_mtx);
+		return (true);
+	}
+	return (false);
 }
 
 bool	smart_sleep(t_philo *philo, uint64_t us)
@@ -38,7 +44,7 @@ bool	smart_sleep(t_philo *philo, uint64_t us)
 	uint64_t	remaining;
 
 	start = get_time();
-	available = philo->table->t_die - (start - read_meal_time(philo));
+	available = philo->table->t_die - (start - philo->last_meal);
 	if (us >= available)
 		duration = available;
 	else
@@ -48,10 +54,10 @@ bool	smart_sleep(t_philo *philo, uint64_t us)
 		if (check_stop(philo->table))
 			return (false);
 		remaining = duration - (get_time() - start);
-		if (remaining < 100)
+		if (remaining < THRESHOLD)
 			usleep(remaining);
 		else
-			usleep(100);
+			usleep(THRESHOLD);
 	}
 	return (!check_death(philo));
 }

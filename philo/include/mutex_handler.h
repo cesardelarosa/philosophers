@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.h                                            :+:      :+:    :+:   */
+/*   mutex_handler.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/20 22:59:45 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/25 20:57:01 by cesi             ###   ########.fr       */
+/*   Created: 2025/03/25 17:41:36 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/03/25 17:53:50 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef MUTEX_HANDLER_H
+# define MUTEX_HANDLER_H
 
-# include "structs.h"
+# include <pthread.h>
+# include <stdbool.h>
 
-uint64_t				get_time(void);
-bool					smart_sleep(t_philo *philo, uint64_t us);
-bool					check_stop(t_table *table);
-void					print_state(t_philo *philo, const char *state);
+typedef struct s_safe_mutex
+{
+	pthread_mutex_t	mtx;
+	bool			init;
+}				t_safe_mutex;
+
+bool	init_safe_mutex(t_safe_mutex *smx);
+bool	lock_safe_mutex(t_safe_mutex *smx);
+bool	unlock_safe_mutex(t_safe_mutex *smx);
+bool	destroy_safe_mutex(t_safe_mutex *smx);
 
 #endif

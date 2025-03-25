@@ -6,41 +6,14 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:02:50 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/20 22:05:46 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/03/25 20:15:27 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "structs.h"
-
-static bool	init_mutexes(t_table *table)
-{
-	if (pthread_mutex_init(&table->print_mtx, NULL) != 0)
-		return (false);
-	if (pthread_mutex_init(&table->stop_mtx, NULL) != 0)
-		return (false);
-	if (pthread_mutex_init(&table->full_mtx, NULL) != 0)
-		return (false);
-	return (true);
-}
-
-static bool	init_forks(t_table *table)
-{
-	unsigned int	i;
-
-	table->forks = malloc(sizeof(t_fork) * table->n_philos);
-	if (!table->forks)
-		return (false);
-	i = 0;
-	while (i < table->n_philos)
-	{
-		table->forks[i].id = i;
-		table->forks[i].taken = 0;
-		if (pthread_mutex_init(&table->forks[i].mtx, NULL) != 0)
-			return (false);
-		i++;
-	}
-	return (true);
-}
+#include "mutex_handler.h"
+#include <stdlib.h>
+#include <string.h>
 
 static void	assign_forks(t_philo *philo, t_table *table, unsigned int i)
 {
@@ -61,6 +34,52 @@ static void	assign_forks(t_philo *philo, t_table *table, unsigned int i)
 	}
 }
 
+static bool	init_mutexes(t_table *table)
+{
+	if (!init_safe_mutex(&table->print_mtx))
+		return (false);
+	if (!init_safe_mutex(&table->stop_mtx))
+	{
+		destroy_safe_mutex(&table->print_mtx);
+		return (false);
+	}
+	if (!init_safe_mutex(&table->full_mtx))
+	{
+		destroy_safe_mutex(&table->print_mtx);
+		destroy_safe_mutex(&table->stop_mtx);
+		return (false);
+	}
+	return (true);
+}
+
+static bool	init_forks(t_table *table)
+{
+	unsigned int	i;
+
+	table->forks = malloc(sizeof(t_fork) * table->n_philos);
+	if (!table->forks)
+		return (false);
+	i = 0;
+	while (i < table->n_philos)
+	{
+		table->forks[i].id = i;
+		table->forks[i].taken = 0;
+		if (!init_safe_mutex(&table->forks[i].mtx))
+		{
+			while (i > 0)
+			{
+				i--;
+				destroy_safe_mutex(&table->forks[i].mtx);
+			}
+			free(table->forks);
+			table->forks = NULL;
+			return (false);
+		}
+		i++;
+	}
+	return (true);
+}
+
 static bool	init_philosophers(t_table *table)
 {
 	unsigned int	i;
@@ -75,7 +94,6 @@ static bool	init_philosophers(t_table *table)
 		table->philos[i].id = i + 1;
 		table->philos[i].table = table;
 		assign_forks(&table->philos[i], table, i);
-		pthread_mutex_init(&table->philos[i].meal_mtx, NULL);
 		i++;
 	}
 	return (true);

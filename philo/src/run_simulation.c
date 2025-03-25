@@ -6,18 +6,20 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:54:22 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/21 11:31:29 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/25 20:41:50 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include "mutex_handler.h"
+#include <pthread.h>
 #include "actions.h"
 
 static void	stop(t_table *table)
 {
-	pthread_mutex_lock(&table->stop_mtx);
+	lock_safe_mutex(&table->stop_mtx);
 	table->stop = true;
-	pthread_mutex_unlock(&table->stop_mtx);
+	unlock_safe_mutex(&table->stop_mtx);
 }
 
 static void	*philosopher_routine(void *arg)
@@ -62,9 +64,7 @@ int	run_simulation(t_table *table)
 	i = 0;
 	while (i < table->n_philos)
 	{
-		pthread_mutex_lock(&table->philos[i].meal_mtx);
 		table->philos[i].last_meal = table->start_time;
-		pthread_mutex_unlock(&table->philos[i].meal_mtx);
 		i++;
 	}
 	if (table->n_meals == 0)
@@ -72,6 +72,9 @@ int	run_simulation(t_table *table)
 	created = create_threads(table);
 	i = 0;
 	while (i < created)
-		pthread_join(table->philos[i++].thread, NULL);
+	{
+		pthread_join(table->philos[i].thread, NULL);
+		i++;
+	}
 	return (created != table->n_philos);
 }
