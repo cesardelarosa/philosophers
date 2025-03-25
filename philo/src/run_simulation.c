@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:54:22 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/25 20:41:50 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/25 21:06:05 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ static void	*philosopher_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while (to_think(philo)
+	while (think(philo)
 		&& take_forks(philo)
-		&& to_eat(philo)
+		&& eat(philo)
 		&& put_forks(philo)
-		&& to_sleep(philo))
+		&& sleep(philo))
 		continue ;
 	stop(philo->table);
 	return (NULL);

@@ -6,11 +6,12 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:18 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/25 20:56:07 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/25 21:09:03 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <unistd.h>
 #define THRESHOLD 1000
 
 static bool	check_death(t_philo *philo)

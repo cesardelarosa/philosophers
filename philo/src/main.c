@@ -6,11 +6,12 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:05:51 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/21 11:26:49 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/25 21:08:45 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
+#include <unistd.h>
 
 int	main(int argc, char **argv)
 {
