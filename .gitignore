@@ -7,18 +7,16 @@
 !philo/
 !philo/Makefile
 !philo/include/
-!philo/include/*.h
+!philo/include/**
 !philo/src/
-!philo/src/*.c
+!philo/src/**
 
 !philo_bonus/
 !philo_bonus/Makefile
 !philo_bonus/include/
-!philo_bonus/include/*.h
+!philo_bonus/include/**
 !philo_bonus/src/
-!philo_bonus/src/*.c
+!philo_bonus/src/**
 
 !tests/
-!tests/*.sh
-tests/*.log
-tests/*.out
+!tests/**
