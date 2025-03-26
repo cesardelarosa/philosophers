@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:24 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/26 12:35:32 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/26 18:08:34 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ bool	take_forks(t_philo *philo)
 	while (smart_sleep(philo, calc_wait_time(philo)))
 	{
 		if (lock_safe_mutex(&philo->first_fork->mtx)
-			&&lock_safe_mutex(&philo->second_fork->mtx)
-			&&philo->first_fork->taken == 0 && philo->second_fork->taken == 0
+			&& lock_safe_mutex(&philo->second_fork->mtx)
+			&& philo->first_fork->taken == 0 && philo->second_fork->taken == 0
 			&& philo->first_fork->stamp != philo->id
 			&& philo->second_fork->stamp != philo->id)
 		{
