@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:18 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/26 10:47:13 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/26 14:38:51 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#define THRESHOLD 1000
+#define THRESHOLD 100
 
 static bool	check_death(t_philo *philo)
 {

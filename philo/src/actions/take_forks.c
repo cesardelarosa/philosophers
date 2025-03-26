@@ -6,76 +6,54 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:24 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/26 12:35:32 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/26 14:36:39 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "action_utils.h"
 #include "timer.h"
 
-static bool	handle_single_philo(t_philo *philo)
+static bool	check_and_lock_fork(t_fork *fork, int id)
 {
-	t_table	*table;
-
-	table = philo->table;
-	lock_safe_mutex(&philo->first_fork->mtx);
-	if (philo->first_fork->taken == 0)
+	if (!lock_safe_mutex(&fork->mtx))
+		return (false);
+	if (fork->taken || fork->stamp == id)
 	{
-		philo->first_fork->taken = 1;
-		unlock_safe_mutex(&philo->first_fork->mtx);
-		print_state(philo, "has taken a fork");
+		unlock_safe_mutex(&fork->mtx);
+		return (false);
 	}
-	else
-		unlock_safe_mutex(&philo->first_fork->mtx);
-	smart_sleep(philo, table->t_die);
-	return (false);
+	return (true);
 }
 
-static uint64_t	calc_wait_time(t_philo *philo)
+static bool	take_single_fork(t_philo *philo, t_fork *fork)
 {
-	uint64_t	current;
-	uint64_t	elapsed;
-	uint64_t	min_elapsed;
-	double		hunger;
-	t_table		*table;
-
-	table = philo->table;
-	current = get_time();
-	elapsed = current - philo->last_meal;
-	min_elapsed = table->t_eat + table->t_sleep;
-	if (elapsed >= table->t_die)
-		return (0);
-	if (elapsed <= min_elapsed)
-		return (1000);
-	if (table->t_die <= min_elapsed)
-		return (0);
-	hunger = (double)(elapsed - min_elapsed) / (table->t_die - min_elapsed);
-	return ((uint64_t)(1000 * (1.0 - hunger)));
+	fork->taken = 1;
+	fork->stamp = philo->id;
+	unlock_safe_mutex(&fork->mtx);
+	return (print_state(philo, "has taken a fork"));
 }
 
 bool	take_forks(t_philo *philo)
 {
-	if (philo->table->n_philos == 1)
-		return (handle_single_philo(philo));
-	while (smart_sleep(philo, calc_wait_time(philo)))
+	bool	one_fork;
+
+	one_fork = philo->first_fork == philo->second_fork;
+	while (smart_sleep(philo, 100))
 	{
-		if (lock_safe_mutex(&philo->first_fork->mtx)
-			&&lock_safe_mutex(&philo->second_fork->mtx)
-			&&philo->first_fork->taken == 0 && philo->second_fork->taken == 0
-			&& philo->first_fork->stamp != philo->id
-			&& philo->second_fork->stamp != philo->id)
+		if (!check_and_lock_fork(philo->first_fork, philo->id))
+			continue ;
+		if (!one_fork && !check_and_lock_fork(philo->second_fork, philo->id))
 		{
-			philo->first_fork->taken = 1;
-			philo->second_fork->taken = 1;
-			philo->first_fork->stamp = philo->id;
-			philo->second_fork->stamp = philo->id;
-			unlock_safe_mutex(&philo->second_fork->mtx);
 			unlock_safe_mutex(&philo->first_fork->mtx);
-			return (print_state(philo, "has taken a fork")
-				&& print_state(philo, "has taken a fork"));
+			continue ;
 		}
-		unlock_safe_mutex(&philo->second_fork->mtx);
-		unlock_safe_mutex(&philo->first_fork->mtx);
+		if (!take_single_fork(philo, philo->first_fork))
+		{
+			unlock_safe_mutex(&philo->second_fork->mtx);
+			continue ;
+		}
+		if (!one_fork && take_single_fork(philo, philo->second_fork))
+			return (true);
 	}
 	return (false);
 }
