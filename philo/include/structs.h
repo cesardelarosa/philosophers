@@ -6,20 +6,21 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:45 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/25 20:14:32 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/26 13:50:05 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
-# include "common.h"
 # include "mutex_handler.h"
+# include <stdint.h>
 
 typedef struct s_fork
 {
 	int					id;
 	int					taken;
+	int					stamp;
 	t_safe_mutex		mtx;
 }	t_fork;
 

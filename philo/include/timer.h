@@ -1,24 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   common.h                                           :+:      :+:    :+:   */
+/*   timer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:45 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/25 21:08:19 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/26 10:48:01 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COMMON_H
-# define COMMON_H
+#ifndef TIMER_H
+# define TIMER_H
 
-# include <pthread.h>
-# include <stdbool.h>
 # include <stdint.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <sys/time.h>
+
+uint64_t				get_time(void);
 
 #endif

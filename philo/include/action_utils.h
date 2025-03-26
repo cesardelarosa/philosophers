@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_time.c                                         :+:      :+:    :+:   */
+/*   action_utils.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/20 22:59:18 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/25 20:51:03 by cesi             ###   ########.fr       */
+/*   Created: 2025/03/20 22:59:45 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/03/26 10:31:44 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/time.h>
-#include <stdint.h>
-#include <stddef.h>
+#ifndef ACTION_UTILS_H
+# define ACTION_UTILS_H
 
-uint64_t	get_time(void)
-{
-	struct timeval	tv;
+# include "structs.h"
 
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000000ULL + tv.tv_usec);
-}
+bool					smart_sleep(t_philo *philo, uint64_t us);
+bool					check_stop(t_table *table);
+bool					print_state(t_philo *philo, const char *state);
+
+#endif
