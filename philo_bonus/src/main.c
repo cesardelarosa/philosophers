@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:05:51 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/26 12:01:14 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/27 10:26:14 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	main(int argc, char **argv)
 		clean_resources(&table);
 		return (1);
 	}
-	if (run_simulation(&table) != 0)
+	if (!run_simulation(&table))
 	{
 		print_error("Simulation encountered an error");
 		clean_resources(&table);

@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:54:22 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/27 09:00:53 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/27 10:31:26 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #include <unistd.h>
 #include <pthread.h>
 
-void	*meal_monitor(void *arg)
+static void	*meal_monitor(void *arg)
 {
 	t_philo	*philo;
 
@@ -63,6 +63,7 @@ static void	philosopher_routine(t_philo *philo)
 int	run_simulation(t_table *table)
 {
 	unsigned int	i;
+	unsigned int	full_count;
 
 	table->start_time = get_time();
 	i = 0;
@@ -74,9 +75,19 @@ int	run_simulation(t_table *table)
 			philosopher_routine(&table->philos[i]);
 		i++;
 	}
-	waitpid(-1, NULL, 0);
+	if (table->n_meals != -1)
+	{
+		full_count = 0;
+		while (full_count < table->n_philos)
+		{
+			sem_wait(table->full_sem);
+			full_count++;
+		}
+	}
+	else
+		waitpid(-1, NULL, 0);
 	i = 0;
 	while (i < table->n_philos)
 		kill(table->pids[i++], SIGKILL);
-	return (0);
+	return (true);
 }

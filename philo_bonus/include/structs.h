@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:45 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/27 08:13:31 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/27 09:43:54 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct s_philo
 	int				id;
 	unsigned int	meals_eaten;
 	uint64_t		last_meal;
+	int				full;
 	t_table			*table;
 }				t_philo;
 
@@ -40,6 +41,7 @@ struct s_table
 	sem_t			*forks_sem;
 	sem_t			*print_sem;
 	sem_t			*meal_sem;
+	sem_t			*full_sem;
 };
 
 #endif
