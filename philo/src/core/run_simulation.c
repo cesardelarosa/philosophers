@@ -6,12 +6,13 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:54:22 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/26 12:07:16 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/27 11:10:39 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "timer.h"
 #include "actions.h"
+#include "action_utils.h"
 
 static void	stop(t_table *table)
 {
@@ -25,11 +26,14 @@ static void	*philosopher_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while (think(philo)
-		&& take_forks(philo)
+	think(philo);
+	if (philo->id % 2)
+		smart_sleep(philo, philo->table->t_eat / 2);
+	while (take_forks(philo)
 		&& eat(philo)
 		&& put_forks(philo)
-		&& sleep(philo))
+		&& sleep(philo)
+		&& think(philo))
 		continue ;
 	stop(philo->table);
 	return (NULL);
