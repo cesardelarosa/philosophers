@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:02:45 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/27 09:52:34 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/27 10:52:29 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	clean_resources(t_table *table)
 	sem_unlink("/print_sem");
 	sem_close(table->meal_sem);
 	sem_unlink("/meal_sem");
+	sem_close(table->room_sem);
+	sem_unlink("/room_sem");
 	if (table->n_meals != -1)
 	{
 		sem_close(table->full_sem);

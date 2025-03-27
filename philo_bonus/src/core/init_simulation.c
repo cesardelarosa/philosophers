@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:02:50 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/27 09:45:38 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/27 10:52:16 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,18 @@ bool	init_simulation(t_table *table)
 	sem_unlink("/print_sem");
 	sem_unlink("/meal_sem");
 	sem_unlink("/full_sem");
+	sem_unlink("/room_sem");
 	table->forks_sem = sem_open("/forks_sem", O_CREAT, 0644, table->n_philos);
 	table->print_sem = sem_open("/print_sem", O_CREAT, 0644, 1);
 	table->meal_sem = sem_open("/meal_sem", O_CREAT, 0644, 1);
+	table->room_sem = sem_open("/room_sem", O_CREAT, 0644,
+			table->n_philos - 1 + (table->n_philos < 1));
 	if (table->n_meals != -1)
 		table->full_sem = sem_open("/full_sem", O_CREAT, 0644, 0);
 	else
 		table->full_sem = NULL;
 	if (table->forks_sem == SEM_FAILED || table->print_sem == SEM_FAILED
-		|| table->meal_sem == SEM_FAILED
+		|| table->meal_sem == SEM_FAILED || table->room_sem == SEM_FAILED
 		|| (table->n_meals != -1 && table->full_sem == SEM_FAILED))
 		return (false);
 	table->pids = malloc(sizeof(pid_t) * table->n_philos);

@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:45 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/27 09:43:54 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/27 10:54:43 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ struct s_table
 	sem_t			*print_sem;
 	sem_t			*meal_sem;
 	sem_t			*full_sem;
+	sem_t			*room_sem;
 };
 
 #endif

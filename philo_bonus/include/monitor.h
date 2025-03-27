@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   put_forks.c                                        :+:      :+:    :+:   */
+/*   monitor.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/20 22:59:24 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/27 10:52:58 by cesi             ###   ########.fr       */
+/*   Created: 2025/03/20 22:54:22 by cde-la-r          #+#    #+#             */
+/*   Updated: 2025/03/27 11:45:04 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "structs.h"
-#include <stdbool.h>
+#ifndef MONITOR_H
+# define MONITOR_H
 
-bool	put_forks(t_philo *philo)
+# include "structs.h"
+
+typedef struct s_monitor_arg
 {
-	sem_post(philo->table->forks_sem);
-	sem_post(philo->table->forks_sem);
-	sem_post(philo->table->room_sem);
-	return (true);
-}
+	t_table			*table;
+	volatile int	*all_full;
+}					t_monitor_arg;
+
+#endif

@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:24 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/26 18:08:34 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/27 10:52:45 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 bool	take_forks(t_philo *philo)
 {
+	sem_wait(philo->table->room_sem);
 	sem_wait(philo->table->forks_sem);
 	print_status(philo, "has taken a fork");
 	sem_wait(philo->table->forks_sem);

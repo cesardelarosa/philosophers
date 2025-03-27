@@ -6,20 +6,37 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:54:22 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/27 10:31:26 by cesi             ###   ########.fr       */
+/*   Updated: 2025/03/27 11:44:40 by cesi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "timer.h"
 #include "actions.h"
-#include <stdbool.h>
-#include <sys/wait.h>
+#include "timer.h"
+#include "monitor.h"
+#include <pthread.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/wait.h>
 #include <unistd.h>
-#include <pthread.h>
+
+static void	*full_monitor(void *arg)
+{
+	t_monitor_arg	*mon;
+	unsigned int	i;
+
+	mon = (t_monitor_arg *)arg;
+	i = 0;
+	while (i < mon->table->n_philos)
+	{
+		sem_wait(mon->table->full_sem);
+		i++;
+	}
+	*(mon->all_full) = 1;
+	return (NULL);
+}
 
 static void	*meal_monitor(void *arg)
 {
@@ -32,9 +49,8 @@ static void	*meal_monitor(void *arg)
 		if (get_time() - philo->last_meal > philo->table->t_die)
 		{
 			sem_wait(philo->table->print_sem);
-			printf("%lu %d died\n",
-				(get_time() - philo->table->start_time) / 1000,
-				philo->id);
+			printf("%lu %d died\n", (get_time() - philo->table->start_time)
+				/ 1000, philo->id);
 			exit(1);
 		}
 		sem_post(philo->table->meal_sem);
@@ -60,11 +76,17 @@ static void	philosopher_routine(t_philo *philo)
 	exit(0);
 }
 
-int	run_simulation(t_table *table)
+bool	run_simulation(t_table *table)
 {
 	unsigned int	i;
-	unsigned int	full_count;
+	int				status;
+	volatile int	all_full;
+	pthread_t		full_thread;
+	t_monitor_arg	mon_arg;
 
+	all_full = 0;
+	mon_arg.table = table;
+	mon_arg.all_full = &all_full;
 	table->start_time = get_time();
 	i = 0;
 	while (i < table->n_philos)
@@ -76,18 +98,25 @@ int	run_simulation(t_table *table)
 		i++;
 	}
 	if (table->n_meals != -1)
+		pthread_create(&full_thread, NULL, full_monitor, &mon_arg);
+	while (1)
 	{
-		full_count = 0;
-		while (full_count < table->n_philos)
+		if (all_full)
+			break ;
+		if (waitpid(-1, &status, WNOHANG) > 0)
 		{
-			sem_wait(table->full_sem);
-			full_count++;
+			if ((WIFEXITED(status) && WEXITSTATUS(status) != 0)
+				|| WIFSIGNALED(status))
+				break ;
 		}
+		usleep(1000);
 	}
-	else
-		waitpid(-1, NULL, 0);
 	i = 0;
 	while (i < table->n_philos)
-		kill(table->pids[i++], SIGKILL);
+	{
+		kill(table->pids[i], SIGKILL);
+		waitpid(table->pids[i], NULL, 0);
+		i++;
+	}
 	return (true);
 }
