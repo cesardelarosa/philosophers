@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:02:50 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/04/17 20:42:33 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/04/17 22:38:48 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,16 @@ static void	unlink_sems(void)
 
 static bool	open_sems(t_table *table)
 {
-	table->forks_sem = sem_open("/forks_sem", O_CREAT, 0644, table->n_philos);
+	unsigned int	room_slots;
+
+	room_slots = 1;
+	if (table->n_philos > 1)
+		room_slots = table->n_philos - 1;
+	table->forks_sem = sem_open("/forks_sem", O_CREAT, 0644,
+			table->n_philos);
 	table->print_sem = sem_open("/print_sem", O_CREAT, 0644, 1);
 	table->meal_sem = sem_open("/meal_sem", O_CREAT, 0644, 1);
-	table->room_sem = sem_open("/room_sem", O_CREAT, 0644,
-			table->n_philos - 1 + (table->n_philos < 1));
+	table->room_sem = sem_open("/room_sem", O_CREAT, 0644, room_slots);
 	if (table->n_meals != -1)
 		table->full_sem = sem_open("/full_sem", O_CREAT, 0644, 0);
 	else

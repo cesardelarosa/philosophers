@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:54:22 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/27 11:44:40 by cesi             ###   ########.fr       */
+/*   Updated: 2025/04/17 22:39:38 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ static void	philosopher_routine(t_philo *philo)
 {
 	pthread_t	monitor;
 
+	if (philo->id % 2 == 0)
+		usleep(philo->table->t_eat / 2);
 	pthread_create(&monitor, NULL, meal_monitor, philo);
 	pthread_detach(monitor);
 	while (true)
