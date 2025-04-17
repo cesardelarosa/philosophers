@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:02:50 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/25 23:40:33 by cesi             ###   ########.fr       */
+/*   Updated: 2025/04/17 23:44:57 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,18 +58,15 @@ static bool	init_forks(t_table *table)
 	table->forks = malloc(sizeof(t_fork) * table->n_philos);
 	if (!table->forks)
 		return (false);
+	memset(table->forks, 0, sizeof(t_fork) * table->n_philos);
 	i = 0;
 	while (i < table->n_philos)
 	{
 		table->forks[i].id = i;
-		table->forks[i].taken = 0;
 		if (!init_safe_mutex(&table->forks[i].mtx))
 		{
 			while (i > 0)
-			{
-				i--;
-				destroy_safe_mutex(&table->forks[i].mtx);
-			}
+				destroy_safe_mutex(&table->forks[--i].mtx);
 			free(table->forks);
 			table->forks = NULL;
 			return (false);
