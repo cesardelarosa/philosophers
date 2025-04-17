@@ -12,6 +12,7 @@
 
 #include "structs.h"
 #include <stdio.h>
+#include <limits.h>
 
 #define ARGS "number_of_philosophers time_to_die time_to_eat time_to_sleep"
 #define OPT_ARG "[number_of_times_each_philosopher_must_eat]"
@@ -25,14 +26,32 @@ static unsigned int	ft_atoui(const char *str, int *error)
 		str++;
 	if (*str == '+')
 		str++;
+	if (*str < '0' || *str > '9')
+	{
+		*error |= 1;
+		return (0);
+	}
 	while (*str >= '0' && *str <= '9')
 	{
 		res = res * 10 + (*str - '0');
+		if (res > INT_MAX)
+		{
+			*error |= 2;
+			return (0);
+		}
 		str++;
 	}
 	if (*str != '\0')
-		*error = 1;
+		*error |= 1;
 	return (res);
+}
+
+static void	handle_error(int error)
+{
+	if (error & 1)
+		printf("Arguments must be non negative numbers\n");
+	if (error & 2)
+		printf("Arguments must not exceed MAX_INT\n");
 }
 
 bool	parse_arguments(int argc, char **argv, t_table *table)
@@ -55,7 +74,7 @@ bool	parse_arguments(int argc, char **argv, t_table *table)
 		table->n_meals = -1;
 	if (error)
 	{
-		printf("Arguments must be non negative numbers\n");
+		handle_error(error);
 		return (false);
 	}
 	return (true);
