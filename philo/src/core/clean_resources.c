@@ -21,10 +21,7 @@ void	clean_resources(t_table *table)
 	{
 		i = 0;
 		while (i < table->n_philos)
-		{
-			destroy_safe_mutex(&table->forks[i].mtx);
-			i++;
-		}
+			destroy_safe_mutex(&table->forks[i++].mtx);
 		free(table->forks);
 		table->forks = NULL;
 	}
