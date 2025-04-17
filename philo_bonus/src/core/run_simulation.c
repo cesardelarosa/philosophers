@@ -6,13 +6,13 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:54:22 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/04/17 22:39:38 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/04/17 23:15:22 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "actions.h"
-#include "timer.h"
 #include "monitor.h"
+#include "timer.h"
 #include <pthread.h>
 #include <signal.h>
 #include <stdbool.h>
@@ -78,32 +78,14 @@ static void	philosopher_routine(t_philo *philo)
 	exit(0);
 }
 
-bool	run_simulation(t_table *table)
+static void	monitor_simulation(t_table *table, volatile int *all_full)
 {
-	unsigned int	i;
 	int				status;
-	volatile int	all_full;
-	pthread_t		full_thread;
-	t_monitor_arg	mon_arg;
+	unsigned int	i;
 
-	all_full = 0;
-	mon_arg.table = table;
-	mon_arg.all_full = &all_full;
-	table->start_time = get_time();
-	i = 0;
-	while (i < table->n_philos)
-	{
-		table->philos[i].last_meal = table->start_time;
-		table->pids[i] = fork();
-		if (table->pids[i] == 0)
-			philosopher_routine(&table->philos[i]);
-		i++;
-	}
-	if (table->n_meals != -1)
-		pthread_create(&full_thread, NULL, full_monitor, &mon_arg);
 	while (1)
 	{
-		if (all_full)
+		if (*all_full)
 			break ;
 		if (waitpid(-1, &status, WNOHANG) > 0)
 		{
@@ -120,5 +102,32 @@ bool	run_simulation(t_table *table)
 		waitpid(table->pids[i], NULL, 0);
 		i++;
 	}
+}
+
+bool	run_simulation(t_table *table)
+{
+	volatile int	all_full;
+	t_monitor_arg	mon_arg;
+	pthread_t		full_thread;
+	unsigned int	i;
+
+	all_full = 0;
+	mon_arg.table = table;
+	mon_arg.all_full = &all_full;
+	table->start_time = get_time();
+	i = 0;
+	while (i < table->n_philos)
+	{
+		table->philos[i].last_meal = table->start_time;
+		table->pids[i] = fork();
+		if (table->pids[i] == -1)
+			return (false);
+		if (table->pids[i] == 0)
+			philosopher_routine(&table->philos[i]);
+		i++;
+	}
+	if (table->n_meals != -1)
+		pthread_create(&full_thread, NULL, full_monitor, &mon_arg);
+	monitor_simulation(table, &all_full);
 	return (true);
 }
