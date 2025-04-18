@@ -19,8 +19,8 @@
 
 static bool	check_death(t_philo *philo)
 {
-	uint64_t		current;
-	unsigned int	ms;
+	uint64_t			current;
+	unsigned long long	ms;
 
 	current = get_time();
 	if (current - philo->last_meal >= philo->table->t_die)
@@ -31,7 +31,7 @@ static bool	check_death(t_philo *philo)
 		{
 			philo->table->stop = true;
 			ms = (current - philo->table->start_time) / 1000;
-			printf("%d %d died\n", ms, philo->id);
+			printf("%llu %d died\n", ms, philo->id);
 		}
 		unlock_safe_mutex(&philo->table->stop_mtx);
 		unlock_safe_mutex(&philo->table->print_mtx);

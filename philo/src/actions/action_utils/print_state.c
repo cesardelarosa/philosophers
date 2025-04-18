@@ -16,7 +16,7 @@
 
 bool	print_state(t_philo *philo, const char *state)
 {
-	long	timestamp;
+	uint16_t	timestamp;
 
 	lock_safe_mutex(&philo->table->print_mtx);
 	if (check_stop(philo->table))
@@ -25,7 +25,7 @@ bool	print_state(t_philo *philo, const char *state)
 		return (false);
 	}
 	timestamp = (get_time() - philo->table->start_time) / 1000;
-	printf("%ld %d %s\n", timestamp, philo->id, state);
+	printf("%llu %d %s\n", (unsigned long long)timestamp, philo->id, state);
 	unlock_safe_mutex(&philo->table->print_mtx);
 	return (true);
 }
