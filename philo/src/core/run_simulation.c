@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:54:22 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/04/18 00:41:34 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/04/18 11:33:57 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ static void	*philosopher_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	if (!think(philo)
-		|| (philo->id % 2 && !smart_sleep(philo, philo->table->t_eat / 2)))
+		|| (philo->id % 2 == 0
+			&& !smart_sleep(philo, philo->table->t_eat / 2)))
 		return (NULL);
 	while (take_forks(philo)
 		&& eat(philo)
