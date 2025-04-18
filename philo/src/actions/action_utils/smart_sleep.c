@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:18 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/04/18 10:49:39 by cde-la-r         ###   ########.fr       */
+/*   Updated: 2025/04/18 12:12:14 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ bool	smart_sleep(t_philo *philo, uint64_t us)
 	start = get_time();
 	elapsed = start - philo->last_meal;
 	if (elapsed >= philo->table->t_die)
-		return (false);
+		return (!check_death(philo));
 	available = philo->table->t_die - elapsed;
 	if (us >= available)
 		us = available;
