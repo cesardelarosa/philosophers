@@ -6,12 +6,11 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:02:36 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/25 21:13:57 by cesi             ###   ########.fr       */
+/*   Updated: 2025/04/18 10:45:58 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "structs.h"
-#include <stdio.h>
 
 bool	check_stop(t_table *table)
 {
