@@ -6,7 +6,7 @@
 /*   By: cde-la-r <code@cesardelarosa.xyz>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:59:24 by cde-la-r          #+#    #+#             */
-/*   Updated: 2025/03/26 10:34:09 by cesi             ###   ########.fr       */
+/*   Updated: 2025/04/18 11:32:26 by cde-la-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ bool	eat(t_philo *philo)
 	t_table	*table;
 
 	table = philo->table;
+	philo->last_meal = get_time();
 	if (print_state(philo, "is eating") == false)
 		return (false);
-	philo->last_meal = get_time();
 	return (smart_sleep(philo, table->t_eat)
 		&& (table->n_meals == -1
 			|| ++philo->meals_eaten < (unsigned int)table->n_meals
