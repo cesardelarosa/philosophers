@@ -1,22 +1,9 @@
 *
 
-!.gitignore
-!.gitmodules
 !README.md
 
-!philo/
-!philo/Makefile
-!philo/include/
-!philo/include/**
-!philo/src/
-!philo/src/**
-
-!philo_bonus/
-!philo_bonus/Makefile
-!philo_bonus/include/
-!philo_bonus/include/**
-!philo_bonus/src/
-!philo_bonus/src/**
-
-!tests/
-!tests/**
+!Makefile
+!include/
+!include/**
+!src/
+!src/**
